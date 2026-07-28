@@ -599,8 +599,9 @@
       </div>
       <div class="card mx-3 sm:mx-auto mb-4 sm:max-w-sm">
         <h2 class="text-sm font-bold text-slate-50 mb-3 flex items-center gap-1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Anotações</h2>
-        <textarea id="calcNotas" class="w-full rounded-lg text-sm text-[#e2e8f0] placeholder-[#94A3B8] resize-none" style="background:#0D0D0D;border:1px solid #334155;padding:0.75rem;min-height:100px;outline:none" placeholder="Escreva suas anotações aqui..."></textarea>
+        <textarea id="calcNotas" class="w-full rounded-lg text-sm text-[#e2e8f0] placeholder-[#94A3B8] resize-none" style="background:#0D0D0D;border:1px solid #334155;padding:0.75rem;min-height:80px;outline:none" placeholder="Escreva suas anotações aqui..."></textarea>
         <button id="salvarNotasBtn" class="btn-primary w-full mt-3">Salvar Anotações</button>
+        <div id="calcNotasLista" class="mt-4 space-y-2"></div>
       </div>
     </div>
   </div>
@@ -1339,10 +1340,54 @@
     });
 
     const calcNotas = document.getElementById('calcNotas');
-    calcNotas.value = localStorage.getItem('calcNotas') || '';
+    const calcNotasLista = document.getElementById('calcNotasLista');
+
+    function carregarNotas() {
+      try { return JSON.parse(localStorage.getItem('calcNotasArr')) || []; } catch { return []; }
+    }
+
+    function salvarNotasArr(arr) {
+      localStorage.setItem('calcNotasArr', JSON.stringify(arr));
+    }
+
+    function renderizarNotas() {
+      const notas = carregarNotas();
+      calcNotasLista.innerHTML = '';
+      if (notas.length === 0) {
+        calcNotasLista.innerHTML = '<div class="text-xs text-[#94A3B8] text-center py-2">Nenhuma anotação salva.</div>';
+        return;
+      }
+      for (let i = notas.length - 1; i >= 0; i--) {
+        const n = notas[i];
+        const card = document.createElement('div');
+        card.className = 'entry-card p-2 rounded-lg text-xs';
+        card.innerHTML = '<div class="flex items-start justify-between gap-2"><div class="flex-1"><div class="font-semibold text-slate-50 mb-1 whitespace-pre-wrap">' + n.text + '</div><div class="text-[#94A3B8] text-[10px]">' + n.date + '</div></div><button class="del-nota-btn text-[#94A3B8] hover:text-[#F20C0C] transition p-1 flex-shrink-0" data-idx="' + i + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
+        calcNotasLista.appendChild(card);
+      }
+      calcNotasLista.querySelectorAll('.del-nota-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+          const notas2 = carregarNotas();
+          notas2.splice(parseInt(btn.dataset.idx), 1);
+          salvarNotasArr(notas2);
+          renderizarNotas();
+          mostrarToast('Anotação removida!', 'success');
+        });
+      });
+    }
+
+    renderizarNotas();
+
     document.getElementById('salvarNotasBtn').addEventListener('click', () => {
-      localStorage.setItem('calcNotas', calcNotas.value);
-      mostrarToast('Anotações salvas!', 'success');
+      const texto = calcNotas.value.trim();
+      if (!texto) { mostrarToast('Digite algo para salvar.', 'error'); return; }
+      const notas = carregarNotas();
+      const agora = new Date();
+      const dataStr = agora.toLocaleDateString('pt-BR') + ' ' + agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+      notas.push({ text: texto, date: dataStr });
+      salvarNotasArr(notas);
+      calcNotas.value = '';
+      renderizarNotas();
+      mostrarToast('Anotação salva!', 'success');
     });
 
     document.addEventListener('keydown', (e) => {
