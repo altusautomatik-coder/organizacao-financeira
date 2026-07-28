@@ -136,6 +136,9 @@
     @keyframes slide-in { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:translateX(0); } }
     .animate-slide-in { animation: slide-in 0.25s ease-out; }
     .calc-btn:active { transform: scale(0.94); }
+    details[open] summary svg { transform: rotate(180deg); }
+    details summary::-webkit-details-marker { display: none; }
+    details summary::marker { display: none; }
     .calc-btn:hover { filter: brightness(1.15); }
     @media (max-width: 768px) {
       .card { padding: 1rem; }
@@ -298,6 +301,29 @@
                 <button class="btn-danger" id="cancelarEntradaBtn" style="display:none">Cancelar</button>
               </div>
             </div>
+            <!-- Exemplos de Entradas -->
+            <details class="mt-4" style="border:1px solid #334155;border-radius:0.75rem;overflow:hidden">
+              <summary class="px-4 py-3 text-sm font-semibold text-[#94A3B8] cursor-pointer list-none flex items-center justify-between hover:text-[#e2e8f0] transition" style="background:#0D0D0D">
+                <span>EXEMPLOS</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform"><polyline points="6 9 12 15 18 9"/></svg>
+              </summary>
+              <div class="px-4 pb-3 text-xs text-[#94A3B8] space-y-0">
+                <div class="flex items-center justify-between py-2 font-semibold border-b border-[#334155] text-[#e2e8f0]">
+                  <span>DESCRIÇÃO</span>
+                  <span>VALOR</span>
+                </div>
+                <div class="flex items-center justify-between py-2 border-b border-[#334155]">  <span>SALÁRIO LÍQUIDO DE [PESSOA 01]</span><span class="text-[#55E088]">R$ 0,00</span></div>
+                <div class="flex items-center justify-between py-2 border-b border-[#334155]">  <span>VALE-ALIMENTAÇÃO DE [PESSOA 01]</span><span class="text-[#55E088]">R$ 0,00</span></div>
+                <div class="flex items-center justify-between py-2 border-b border-[#334155]">  <span>VALE-REFEIÇÃO DE [PESSOA 01]</span><span class="text-[#55E088]">R$ 0,00</span></div>
+                <div class="flex items-center justify-between py-2 border-b border-[#334155]">  <span>SALÁRIO LÍQUIDO DE [PESSOA 02]</span><span class="text-[#55E088]">R$ 0,00</span></div>
+                <div class="flex items-center justify-between py-2 border-b border-[#334155]">  <span>VALE-ALIMENTAÇÃO DE [PESSOA 02]</span><span class="text-[#55E088]">R$ 0,00</span></div>
+                <div class="flex items-center justify-between py-2 border-b border-[#334155]">  <span>VALE-REFEIÇÃO DE [PESSOA 02]</span><span class="text-[#55E088]">R$ 0,00</span></div>
+                <div class="flex items-center justify-between py-2 border-b border-[#334155]">  <span>OUTRAS ENTRADAS 01 (AVON, UBER...)</span><span class="text-[#55E088]">R$ 0,00</span></div>
+                <div class="flex items-center justify-between py-2 border-b border-[#334155]">  <span>OUTRAS ENTRADAS 02 (COMISSÕES, BÔNUS...)</span><span class="text-[#55E088]">R$ 0,00</span></div>
+                <div class="flex items-center justify-between py-2 border-b border-[#334155]">  <span>OUTRAS ENTRADAS 03 (ALUGUEL, AULAS...)</span><span class="text-[#55E088]">R$ 0,00</span></div>
+                <div class="flex items-center justify-between py-2 font-semibold text-[#e2e8f0]">  <span>TOTAL DE ENTRADAS</span><span class="text-[#55E088]">R$ 0,00</span></div>
+              </div>
+            </details>
           </div>
         </div>
         <!-- List -->
