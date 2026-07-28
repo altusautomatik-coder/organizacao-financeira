@@ -1598,7 +1598,9 @@
       renderizarCalendario();
     }
 
-    function removerGastoFixo(id) {
+    async function removerGastoFixo(id) {
+      const ok = await mostrarConfirm('Tem certeza que deseja excluir este gasto fixo?');
+      if (!ok) return;
       const gastos = getGastosFixos();
       const idx = gastos.findIndex(g => g.id == id);
       if (idx !== -1) {
