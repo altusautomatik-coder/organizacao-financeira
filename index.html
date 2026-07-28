@@ -915,7 +915,7 @@
           plugins: {
             legend: {
               position: 'bottom',
-              labels: { color: '#94A3B8', padding: 12, font: { size: 12 } }
+              labels: { color: document.body.classList.contains('light-mode') ? '#2F2F2F' : '#94A3B8', padding: 14, font: { size: 14 } }
             },
             tooltip: {
               backgroundColor: '#0D0D0D',
@@ -945,6 +945,8 @@
       }
       if (chartDespesas) {
         chartDespesas.data.datasets[0].data = [totais.despesasEssenciais, totais.despesasNaoEssenciais];
+        const corLegenda = document.body.classList.contains('light-mode') ? '#2F2F2F' : '#94A3B8';
+        chartDespesas.options.plugins.legend.labels.color = corLegenda;
         chartDespesas.update('none');
       }
     }
