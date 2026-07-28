@@ -186,6 +186,13 @@
     body.light-mode [class*="placeholder-\[#94A3B8\]"]::placeholder { color: #2F2F2F !important; }
     body.light-mode [style*="color:#94A3B8"] { color: #2F2F2F !important; }
     body.light-mode [stroke="#94A3B8"] { stroke: #2F2F2F !important; }
+    body.light-mode #calcDisplay { background: #fafaf8 !important; border-color: #d8d4cc !important; color: #2F2F2F !important; }
+    body.light-mode #calcNotas { background: #fafaf8 !important; border-color: #d8d4cc !important; color: #2F2F2F !important; }
+    body.light-mode .calc-btn { background: #e8e4dc !important; color: #2F2F2F !important; }
+    body.light-mode .calc-btn[style*="#8C0712"] { background: #8C0712 !important; color: #f8fafc !important; }
+    body.light-mode .calc-btn[style*="#12823B"] { background: #12823B !important; color: #f8fafc !important; }
+    body.light-mode #calcClear { background: #e8e4dc !important; border-color: #d8d4cc !important; color: #2F2F2F !important; }
+    body.light-mode #calcBackspace { background: #e8e4dc !important; border-color: #d8d4cc !important; color: #2F2F2F !important; }
     @media (max-width: 480px) {
       input:not([type="range"]):not([type="date"]):not([type="checkbox"]):not([type="radio"]) { padding: 0.55rem 0.75rem; font-size: 16px; }
       .btn-primary, .btn-danger { padding: 0.55rem 1rem; font-size: 0.82rem; }
@@ -997,17 +1004,26 @@
     let despesaEditandoId = null;
     let despesaTipoAtual = 'essencial';
 
+    function aplicarEstiloTipo(ativo) {
+      const t = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+      const bg = t === 'light' ? '#fafaf8' : '#0D0D0D';
+      const inactBorder = t === 'light' ? '#d8d4cc' : '#334155';
+      const inactColor = t === 'light' ? '#2F2F2F' : '#94A3B8';
+      if (ativo === 'essencial') {
+        document.getElementById('tipoEssencialBtn').style.cssText = 'background:' + bg + ';border-color:#12823B;color:#55E088';
+        document.getElementById('tipoNaoEssencialBtn').style.cssText = 'background:' + bg + ';border-color:' + inactBorder + ';color:' + inactColor;
+      } else {
+        document.getElementById('tipoNaoEssencialBtn').style.cssText = 'background:' + bg + ';border-color:#8C0712;color:#F20C0C';
+        document.getElementById('tipoEssencialBtn').style.cssText = 'background:' + bg + ';border-color:' + inactBorder + ';color:' + inactColor;
+      }
+    }
     document.getElementById('tipoEssencialBtn').addEventListener('click', () => {
-      despesaTipoAtual = 'essencial';
-      document.getElementById('despesaTipo').value = 'essencial';
-      document.getElementById('tipoEssencialBtn').style.cssText = 'background:#0D0D0D;border-color:#12823B;color:#55E088';
-      document.getElementById('tipoNaoEssencialBtn').style.cssText = 'background:#0D0D0D;border-color:#334155;color:#94A3B8';
+      despesaTipoAtual = 'essencial'; document.getElementById('despesaTipo').value = 'essencial';
+      aplicarEstiloTipo('essencial');
     });
     document.getElementById('tipoNaoEssencialBtn').addEventListener('click', () => {
-      despesaTipoAtual = 'nao-essencial';
-      document.getElementById('despesaTipo').value = 'nao-essencial';
-      document.getElementById('tipoNaoEssencialBtn').style.cssText = 'background:#0D0D0D;border-color:#8C0712;color:#F20C0C';
-      document.getElementById('tipoEssencialBtn').style.cssText = 'background:#0D0D0D;border-color:#334155;color:#94A3B8';
+      despesaTipoAtual = 'nao-essencial'; document.getElementById('despesaTipo').value = 'nao-essencial';
+      aplicarEstiloTipo('nao-essencial');
     });
 
     function renderizarDespesas() {
