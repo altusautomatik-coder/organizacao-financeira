@@ -200,16 +200,14 @@
     </div>
 
     <!-- Month Selector -->
-    <div class="flex items-center justify-between mb-4 px-1">
-      <div class="flex items-center gap-2">
-        <button id="mesAnteriorBtn" class="p-1.5 rounded-lg hover:bg-slate-800 transition" style="background:#0D0D0D;border:1px solid #334155;cursor:pointer">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
-        </button>
-        <span id="mesAtualLabel" class="text-sm font-bold text-slate-50 min-w-[140px] text-center"></span>
-        <button id="mesProximoBtn" class="p-1.5 rounded-lg hover:bg-slate-800 transition" style="background:#0D0D0D;border:1px solid #334155;cursor:pointer">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
-        </button>
-      </div>
+    <div class="flex items-center mb-4" style="justify-content:space-between">
+      <button id="mesAnteriorBtn" class="p-2 sm:p-3 rounded-lg hover:bg-slate-800 transition flex-shrink-0" style="background:#0D0D0D;border:1px solid #334155;cursor:pointer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <span id="mesAtualLabel" class="text-sm sm:text-base font-bold text-slate-50 text-center flex-1"></span>
+      <button id="mesProximoBtn" class="p-2 sm:p-3 rounded-lg hover:bg-slate-800 transition flex-shrink-0" style="background:#0D0D0D;border:1px solid #334155;cursor:pointer">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
     </div>
 
     <!-- Tabs -->
@@ -258,10 +256,6 @@
             <canvas id="chartDespesas"></canvas>
           </div>
         </div>
-      </div>
-
-      <div class="text-center mb-6">
-        <span class="text-xs text-[#94A3B8] font-medium" id="mesResumoLabel"></span>
       </div>
 
       <!-- Income & Expense Breakdown -->
@@ -793,8 +787,6 @@
         }
         despLista.innerHTML = html;
       }
-
-      document.getElementById('mesResumoLabel').textContent = entradas.length + ' entradas | ' + despesas.length + ' despesas';
 
       atualizarCharts();
     }
