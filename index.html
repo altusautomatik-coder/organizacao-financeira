@@ -8,7 +8,7 @@
   <link rel="icon" type="image/png" href="icone.png">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
   <link rel="manifest" href="manifest.json">
-  <meta name="theme-color" content="#0D0D0D">
+  <meta name="theme-color" content="#F8FAFC">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Organizador Financeiro">
@@ -19,10 +19,8 @@
       theme: {
         extend: {
           colors: {
-            blood: { 900: '#590707', 800: '#8C0712', 600: '#A60A0A', 500: '#F20C0C' },
-            dark: '#0D0D0D',
-            card: '#0D0D0D',
-            profit: '#55E088',
+            profit: '#10B981',
+            loss: '#EF4444',
           }
         }
       }
@@ -38,10 +36,9 @@
   </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
-    html { font-size: 110%; }
     body {
-      background: #0D0D0D;
-      color: #e2e8f0;
+      background: #F8FAFC;
+      color: #1E293B;
       font-family: 'Inter', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
       -webkit-font-smoothing: antialiased;
@@ -50,9 +47,9 @@
     }
     input, button, textarea, select { font-family: inherit; }
     input:not([type="range"]):not([type="date"]):not([type="checkbox"]):not([type="radio"]) {
-      background: #0D0D0D;
-      border: 1px solid #334155;
-      color: #f8fafc;
+      background: #FFFFFF;
+      border: 1px solid #E2E8F0;
+      color: #1E293B;
       border-radius: 0.5rem;
       padding: 0.6rem 1rem;
       font-size: 0.9rem;
@@ -60,162 +57,126 @@
       transition: border-color 0.2s, box-shadow 0.2s;
       text-indent: 2px;
     }
-    input:not([type="range"]):not([type="date"]):not([type="checkbox"]):not([type="radio"]):focus { outline: none; border-color: #94A3B8; box-shadow: 0 0 0 3px rgba(140,7,18,0.12); }
+    input:not([type="range"]):not([type="date"]):not([type="checkbox"]):not([type="radio"]):focus { outline: none; border-color: #10B981; box-shadow: 0 0 0 3px rgba(16,185,129,0.12); }
+    input:not([type="range"]):not([type="date"]):not([type="checkbox"]):not([type="radio"]):disabled { opacity: 0.5; cursor: default; }
     .tab-btn {
-      padding: 0.6rem 1.4rem;
       font-size: 0.82rem;
       font-weight: 600;
       border-radius: 0.5rem 0.5rem 0 0;
       cursor: pointer;
       transition: all 0.2s;
-      color: #94A3B8;
+      color: #64748B;
       background: transparent;
       border: none;
       border-bottom: 2px solid transparent;
     }
-    .tab-btn.active { color: #F20C0C; border-bottom-color: #F20C0C; background: rgba(242,12,12,0.06); }
-    .tab-btn:hover:not(.active) { color: #A60A0A; }
+    .tab-btn.active { color: #10B981; border-bottom-color: #10B981; background: rgba(16,185,129,0.06); }
+    .tab-btn:hover:not(.active) { color: #059669; }
     .tab-content { display: none; }
     .tab-content.active { display: block; }
     .card {
-      background: #0D0D0D;
-      border: 1px solid #334155;
+      background: #FFFFFF;
+      border: none;
       border-radius: 1rem;
       padding: 1.5rem;
-      box-shadow: 0 4px 6px -1px rgba(0,0,0,0.5);
+      box-shadow: 0 1px 3px rgba(0,0,0,0.05);
     }
-    .text-label { color: #94A3B8; }
+    .text-label { color: #64748B; }
+    .text-profit { color: #10B981; }
+    .badge-profit { background: #D1FAE5; color: #065F46; display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; }
+    .badge-loss { background: #FEE2E2; color: #991B1B; display: inline-block; padding: 1px 6px; border-radius: 4px; font-size: 10px; font-weight: 700; }
     .btn-primary {
-      background: #12823B;
-      color: #f8fafc;
-      border: 1px solid #12823B;
+      background: #10B981;
+      color: #FFFFFF;
+      border: none;
       font-weight: 700;
       padding: 0.65rem 1.5rem;
       border-radius: 0.5rem;
       cursor: pointer;
       font-size: 0.9rem;
-      transition: opacity 0.2s, transform 0.1s;
+      transition: background 0.2s, transform 0.1s;
     }
-    .btn-primary:hover { background: #0F6B30; }
+    .btn-primary:hover { background: #059669; }
     .btn-primary:active { transform: scale(0.97); }
     .btn-primary:disabled { opacity: 0.35; cursor: not-allowed; }
-    .btn-danger {
-      background: #8C0712;
-      color: #f8fafc;
-      border: 1px solid #8C0712;
-      font-weight: 700;
-      padding: 0.65rem 1.5rem;
-      border-radius: 0.5rem;
-      cursor: pointer;
-      font-size: 0.9rem;
-      transition: opacity 0.2s, transform 0.1s;
-    }
-    .btn-danger:hover { background: #A60A0A; }
+    .btn-danger { background: #EF4444; color: #FFFFFF; border: none; font-weight: 700; padding: 0.65rem 1.5rem; border-radius: 0.5rem; cursor: pointer; font-size: 0.9rem; transition: background 0.2s, transform 0.1s; }
+    .btn-danger:hover { background: #DC2626; }
     .btn-danger:active { transform: scale(0.97); }
-    .stat-label { font-size: 0.7rem; letter-spacing: 0.04em; color: #94A3B8; font-weight: 600; }
+    .stat-label { font-size: 0.7rem; letter-spacing: 0.04em; color: #64748B; font-weight: 600; }
     .stat-card {
-      background: #0D0D0D;
-      border: 1px solid #334155;
+      background: #FFFFFF;
+      border: 1px solid #F1F5F9;
       border-radius: 0.75rem;
       padding: 1rem 1.2rem;
-      transition: border-color 0.2s;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
     }
-    .stat-card:hover { border-color: #94A3B8; }
+    .stat-card:hover { border-color: #CBD5E1; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
     .entry-card {
-      background: #0D0D0D;
-      border: 1px solid #334155;
+      background: #FFFFFF;
+      border: 1px solid #F1F5F9;
       border-radius: 0.75rem;
       padding: 0.9rem 1.2rem;
       display: flex;
       align-items: center;
       gap: 1rem;
+      transition: border-color 0.2s;
     }
-    .entry-card:hover { border-color: #94A3B8; }
-    .desc-label { font-size: 0.8rem; color: #e2e8f0; font-weight: 500; }
+    .entry-card:hover { border-color: #CBD5E1; }
+    .desc-label { font-size: 0.8rem; color: #1E293B; font-weight: 500; }
     .value-label { font-size: 0.9rem; font-weight: 700; }
+    .table-wrap { overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; font-size: 0.83rem; }
+    th { text-align: left; padding: 0.6rem 0.8rem; color: #64748B; font-weight: 600; text-transform: uppercase; font-size: 0.68rem; letter-spacing: 0.05em; border-bottom: 1px solid #E2E8F0; }
+    td { padding: 0.55rem 0.8rem; border-bottom: 1px solid #F1F5F9; }
+    tr:nth-child(even) td { background: rgba(241,245,249,0.5); }
+    .day-card {
+      background: #FFFFFF;
+      border: 1px solid #F1F5F9;
+      border-radius: 0.75rem;
+      padding: 0.9rem 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      box-shadow: 0 1px 2px rgba(0,0,0,0.03);
+    }
+    .day-card:hover { border-color: #CBD5E1; }
+    .day-num {
+      width: 2.4rem; height: 2.4rem;
+      border-radius: 0.6rem;
+      background: #F8FAFC;
+      border: 1px solid #E2E8F0;
+      display: flex; align-items: center; justify-content: center;
+      font-weight: 700; font-size: 0.85rem; color: #64748B;
+      flex-shrink: 0;
+    }
+    .cal-dia { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 0.6rem; cursor: pointer; font-size: 0.85rem; font-weight: 600; transition: background 0.15s, border-color 0.15s; border: 1.5px solid transparent; color: #1E293B; background: transparent; user-select: none; }
+    .cal-dia:hover { background: #F1F5F9; border-color: #CBD5E1; }
+    .cal-dia.other-month { color: #CBD5E1; opacity: 0.5; }
+    .cal-dia.today { border-color: #10B981; }
+    .cal-dia.selected { background: #10B981; border-color: #10B981; color: #fff; }
+    .cal-dia.has-gasto::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; border-radius: 50%; background: #10B981; }
+    .cal-dia.selected.has-gasto::after { background: #fff; }
+    .cal-dia.positivo { background: rgba(16,185,129,0.1); border-color: rgba(16,185,129,0.25); }
+    .cal-dia.negativo { background: rgba(239,68,68,0.1); border-color: rgba(239,68,68,0.25); }
+    .cal-dia.positivo:hover { background: rgba(16,185,129,0.2); }
+    .cal-dia.negativo:hover { background: rgba(239,68,68,0.2); }
     ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: #0D0D0D; }
-    ::-webkit-scrollbar-thumb { background: #0D0D0D; border-radius: 3px; }
+    ::-webkit-scrollbar-track { background: #F1F5F9; }
+    ::-webkit-scrollbar-thumb { background: #CBD5E1; border-radius: 3px; }
     @keyframes slide-in { from { opacity:0; transform:translateX(20px); } to { opacity:1; transform:translateX(0); } }
     .animate-slide-in { animation: slide-in 0.25s ease-out; }
     .calc-btn:active { transform: scale(0.94); }
+    .calc-btn:hover { filter: brightness(1.15); }
     details[open] summary svg { transform: rotate(180deg); }
     details summary::-webkit-details-marker { display: none; }
     details summary::marker { display: none; }
-    .calc-btn:hover { filter: brightness(1.15); }
     @media (max-width: 768px) {
       .card { padding: 1rem; }
       .stat-card { padding: 0.75rem 1rem; }
+      .tab-content.active { padding: 0; }
+      .table-wrap { margin: 0 -0.75rem; }
     }
-    body.light-mode { background: #f5f3ef; color: #2F2F2F; }
-    body.light-mode .card { background: #fafaf8; border-color: #d8d4cc; box-shadow: none; }
-    body.light-mode .stat-card { background: #fafaf8; border-color: #d8d4cc; }
-    body.light-mode .stat-card:hover { border-color: #bfb9ae; }
-    body.light-mode .entry-card { background: #fafaf8; border-color: #d8d4cc; }
-    body.light-mode .entry-card:hover { border-color: #bfb9ae; }
-    body.light-mode .desc-label { color: #2F2F2F; }
-    body.light-mode input:not([type="range"]):not([type="date"]):not([type="checkbox"]):not([type="radio"]) { background: #fafaf8; border-color: #d8d4cc; color: #2F2F2F; }
-    body.light-mode input:not([type="range"]):not([type="date"]):not([type="checkbox"]):not([type="radio"]):focus { border-color: #A60A0A; box-shadow: 0 0 0 3px rgba(166,10,10,0.08); }
-    body.light-mode .tab-btn { color: #2F2F2F; }
-    body.light-mode .tab-btn.active { color: #A60A0A; border-bottom-color: #A60A0A; background: rgba(166,10,10,0.04); }
-    body.light-mode .tab-btn:hover:not(.active) { color: #8C0712; }
-    body.light-mode .stat-label { color: #2F2F2F; }
-    body.light-mode .text-label { color: #2F2F2F; }
-    body.light-mode #toastContainer > div { background: #fafaf8 !important; border-color: #d8d4cc !important; color: #2F2F2F !important; }
-    body.light-mode #confirmModal > div { background: #fafaf8; border-color: #d8d4cc; }
-    body.light-mode #confirmModal p { color: #2F2F2F; }
-    body.light-mode #loginOverlay { background: #f5f3ef; }
-    body.light-mode #loginOverlay .border { border-color: #d8d4cc; background: #fafaf8; }
-    body.light-mode #loginOverlay input { background: #fafaf8; border-color: #d8d4cc; color: #2F2F2F; }
-    body.light-mode details[style*="border"] { border-color: #d8d4cc !important; }
-    body.light-mode details summary { background: #fafaf8 !important; color: #2F2F2F !important; }
-    body.light-mode .examples-content { color: #2F2F2F !important; }
-    body.light-mode .examples-content .desc-header { color: #2F2F2F !important; }
-    body.light-mode .examples-content .desc-header span { color: #2F2F2F !important; }
-    body.light-mode .examples-content [class*="border-"] { border-color: #d8d4cc !important; }
-    body.light-mode details summary:hover { color: #2F2F2F !important; }
-    body.light-mode .border-gray-800 { border-color: #d8d4cc; }
-    body.light-mode ::-webkit-scrollbar-track { background: #f5f3ef; }
-    body.light-mode ::-webkit-scrollbar-thumb { background: #cdc7bb; }
-    body.light-mode .text-slate-50 { color: #2F2F2F; }
-    body.light-mode .text-slate-400 { color: #2F2F2F; }
-    body.light-mode .text-slate-50 span.text-slate-400 { color: #2F2F2F; }
-    body.light-mode [class*="bg-\[#0D0D0D\]"] { background: #FAFAF8 !important; }
-    body.light-mode .btn-primary { background: #12823B !important; border-color: #12823B !important; }
-    body.light-mode .btn-danger { background: #8C0712 !important; border-color: #8C0712 !important; }
-    body.light-mode button[style*="border:1px solid #334155"] { background: #fafaf8 !important; border-color: #d8d4cc !important; }
-    body.light-mode button[style*="border:1px solid #334155"] svg { stroke: #2F2F2F; }
-    body.light-mode button[style*="border-color:#12823B"] { background: #fafaf8 !important; }
-    body.light-mode button[style*="border-color:#334155;color:#94A3B8"] { background: #fafaf8 !important; }
-    body.light-mode div[style*="border:2px solid #8C0712"] { background: #fafaf8 !important; }
-    body.light-mode [class*="text-\[#94A3B8\]"] { color: #2F2F2F !important; }
-    body.light-mode #headerUserEmail { color: #2F2F2F !important; }
-    body.light-mode [class*="placeholder-\[#94A3B8\]"]::placeholder { color: #2F2F2F !important; }
-    body.light-mode [style*="color:#94A3B8"] { color: #2F2F2F !important; }
-    body.light-mode [stroke="#94A3B8"] { stroke: #2F2F2F !important; }
-    body.light-mode #calcDisplay { background: #fafaf8 !important; border-color: #d8d4cc !important; color: #2F2F2F !important; }
-    body.light-mode #calcNotas { background: #fafaf8 !important; border-color: #d8d4cc !important; color: #2F2F2F !important; }
-    body.light-mode .calc-btn { background: #e8e4dc !important; color: #2F2F2F !important; }
-    body.light-mode .calc-btn[style*="#8C0712"] { background: #8C0712 !important; color: #f8fafc !important; }
-    body.light-mode .calc-btn[style*="#12823B"] { background: #12823B !important; color: #f8fafc !important; }
-    body.light-mode #calcClear { background: #e8e4dc !important; border-color: #d8d4cc !important; color: #2F2F2F !important; }
-    body.light-mode #calcBackspace { background: #e8e4dc !important; border-color: #d8d4cc !important; color: #2F2F2F !important; }
-    .cal-dia { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem; cursor: pointer; font-size: 0.82rem; font-weight: 500; transition: background 0.15s, border-color 0.15s; border: 1px solid transparent; color: #e2e8f0; background: transparent; position: relative; user-select: none; }
-    .cal-dia:hover { background: #1E293B; border-color: #334155; }
-    .cal-dia.other-month { color: #475569; }
-    .cal-dia.today { border-color: #8C0712; font-weight: 700; }
-    .cal-dia.selected { background: #8C0712; border-color: #8C0712; color: #fff; font-weight: 700; }
-    .cal-dia.has-gasto::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; border-radius: 50%; background: #55E088; }
-    .cal-dia.selected.has-gasto::after { background: #fff; }
-    body.light-mode .cal-dia { color: #2F2F2F; }
-    body.light-mode .cal-dia:hover { background: #e5e0d8; border-color: #d8d4cc; }
-    body.light-mode .cal-dia.other-month { color: #b0a99a; }
-    body.light-mode .cal-dia.today { border-color: #8C0712; }
-    body.light-mode .cal-dia.selected { background: #8C0712; border-color: #8C0712; color: #fff; }
-    body.light-mode .cal-dia.has-gasto::after { background: #12823B; }
-    body.light-mode .cal-dia.selected.has-gasto::after { background: #fff; }
-    body.light-mode #calLista .entry-card { background: #fafaf8; border-color: #d8d4cc; }
-    body.light-mode #calLista .entry-card:hover { border-color: #bfb9ae; }
     @media (max-width: 480px) {
       input:not([type="range"]):not([type="date"]):not([type="checkbox"]):not([type="radio"]) { padding: 0.55rem 0.75rem; font-size: 16px; }
       .btn-primary, .btn-danger { padding: 0.55rem 1rem; font-size: 0.82rem; }
@@ -227,34 +188,34 @@
   <div id="toastContainer" class="fixed top-4 right-4 z-[100] flex flex-col gap-2" style="display:none"></div>
 
   <!-- Confirm Modal -->
-  <div id="confirmModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/60" style="display:none">
-    <div class="bg-[#0D0D0D] border border-[#334155] rounded-xl p-6 max-w-sm w-full mx-4 shadow-2xl">
-      <p id="confirmMsg" class="text-[#e2e8f0] text-sm mb-5"></p>
+  <div id="confirmModal" class="fixed inset-0 z-[100] flex items-center justify-center bg-black/40" style="display:none">
+    <div class="bg-white border border-gray-200 rounded-xl p-6 max-w-sm w-full mx-4 shadow-lg">
+      <p id="confirmMsg" class="text-slate-800 text-sm mb-5"></p>
       <div class="flex gap-3 justify-end">
-        <button id="confirmNao" class="px-4 py-2 rounded-lg text-sm font-semibold text-white" style="background:#8C0712">Cancelar</button>
-        <button id="confirmSim" class="px-4 py-2 rounded-lg text-sm font-semibold text-white" style="background:#12823B">Confirmar</button>
+        <button id="confirmNao" class="px-4 py-2 rounded-lg text-sm font-semibold text-white" style="background:#EF4444">Cancelar</button>
+        <button id="confirmSim" class="px-4 py-2 rounded-lg text-sm font-semibold text-white" style="background:#10B981">Confirmar</button>
       </div>
     </div>
   </div>
 
   <!-- Login Overlay -->
-  <div id="loginOverlay" class="fixed inset-0 z-50 items-center justify-center bg-[#0D0D0D]" style="display:none">
-    <div class="w-full max-w-sm mx-4 p-6 rounded-xl border border-[#334155] bg-[#0D0D0D]">
+  <div id="loginOverlay" class="fixed inset-0 z-50 items-center justify-center bg-[#F8FAFC]" style="display:none">
+    <div class="w-full max-w-sm mx-4 p-6 rounded-xl border border-gray-200 bg-white shadow-lg">
       <div class="flex items-center gap-3 mb-6">
-        <img src="icon-192.png" alt="" class="w-10 h-10 rounded-lg bg-[#0D0D0D] ring-1 ring-slate-600">
-        <h1 class="text-lg font-bold text-slate-50">Organizador <span class="text-slate-400">Financeiro</span></h1>
+        <img src="icon-192.png" alt="" class="w-10 h-10 rounded-lg bg-white ring-1 ring-slate-200">
+        <h1 class="text-lg font-bold text-slate-800">Organizador <span class="text-slate-400">Financeiro</span></h1>
       </div>
       <div id="loginForm">
-        <input id="loginEmail" type="email" placeholder="E-mail" class="w-full mb-3 px-4 py-2.5 rounded-lg border border-[#334155] bg-[#0D0D0D] text-[#e2e8f0] text-sm placeholder-[#94A3B8] focus:outline-none focus:border-[#12823B]">
-        <input id="loginSenha" type="password" placeholder="Senha" class="w-full mb-4 px-4 py-2.5 rounded-lg border border-[#334155] bg-[#0D0D0D] text-[#e2e8f0] text-sm placeholder-[#94A3B8] focus:outline-none focus:border-[#12823B]">
-        <button id="loginBtn" class="w-full py-2.5 rounded-lg font-semibold text-sm text-white" style="background:#12823B">Entrar</button>
-        <p class="mt-3 text-center text-xs text-[#94A3B8]">Não tem conta? <button id="mostrarCadastroBtn" class="text-[#55E088] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs">Cadastrar</button></p>
+        <input id="loginEmail" type="email" placeholder="E-mail" class="w-full mb-3 px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:border-[#10B981]">
+        <input id="loginSenha" type="password" placeholder="Senha" class="w-full mb-4 px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:border-[#10B981]">
+        <button id="loginBtn" class="w-full py-2.5 rounded-lg font-semibold text-sm text-white" style="background:#10B981">Entrar</button>
+        <p class="mt-3 text-center text-xs text-slate-400">Não tem conta? <button id="mostrarCadastroBtn" class="text-[#10B981] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs">Cadastrar</button></p>
       </div>
       <div id="cadastroForm" class="hidden">
-        <input id="cadastroEmail" type="email" placeholder="E-mail" class="w-full mb-3 px-4 py-2.5 rounded-lg border border-[#334155] bg-[#0D0D0D] text-[#e2e8f0] text-sm placeholder-[#94A3B8] focus:outline-none focus:border-[#12823B]">
-        <input id="cadastroSenha" type="password" placeholder="Senha (mín. 6 caracteres)" class="w-full mb-4 px-4 py-2.5 rounded-lg border border-[#334155] bg-[#0D0D0D] text-[#e2e8f0] text-sm placeholder-[#94A3B8] focus:outline-none focus:border-[#12823B]">
-        <button id="cadastroBtn" class="w-full py-2.5 rounded-lg font-semibold text-sm text-white" style="background:#12823B">Cadastrar</button>
-        <p class="mt-3 text-center text-xs text-[#94A3B8]">Já tem conta? <button id="mostrarLoginBtn" class="text-[#55E088] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs">Entrar</button></p>
+        <input id="cadastroEmail" type="email" placeholder="E-mail" class="w-full mb-3 px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:border-[#10B981]">
+        <input id="cadastroSenha" type="password" placeholder="Senha (mín. 6 caracteres)" class="w-full mb-4 px-4 py-2.5 rounded-lg border border-gray-200 bg-white text-slate-800 text-sm placeholder-slate-400 focus:outline-none focus:border-[#10B981]">
+        <button id="cadastroBtn" class="w-full py-2.5 rounded-lg font-semibold text-sm text-white" style="background:#10B981">Cadastrar</button>
+        <p class="mt-3 text-center text-xs text-slate-400">Já tem conta? <button id="mostrarLoginBtn" class="text-[#10B981] hover:underline bg-transparent border-none p-0 cursor-pointer text-xs">Entrar</button></p>
       </div>
     </div>
   </div>
@@ -264,30 +225,30 @@
     <div class="mb-4 sm:mb-6">
       <div class="flex items-center justify-between">
         <div class="flex items-center gap-2 sm:gap-3 min-w-0">
-          <img src="icon-192.png" alt="" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-[#0D0D0D] ring-1 ring-slate-600 flex-shrink-0">
-          <h1 class="text-base sm:text-xl font-bold tracking-tight text-slate-50">Organizador <span class="text-slate-400">Financeiro</span></h1>
+          <img src="icon-192.png" alt="" class="w-7 h-7 sm:w-8 sm:h-8 rounded-lg bg-white ring-1 ring-slate-200 flex-shrink-0">
+          <h1 class="text-base sm:text-xl font-bold tracking-tight text-slate-800">Organizador <span class="text-slate-400">Financeiro</span></h1>
         </div>
-        <div id="userArea" class="flex items-center gap-2 flex-shrink-0">
+        <div id="userArea" class="hidden flex items-center gap-2 flex-shrink-0">
           <span id="headerUserEmail" class="hidden sm:block text-xs text-[#94A3B8]"></span>
-          <button id="themeToggleBtn" class="p-1.5 sm:p-2 rounded-lg text-sm leading-none transition" style="background:#0D0D0D;border:1px solid #334155;cursor:pointer" title="Alternar tema">🌙</button>
-          <button id="headerLogoutBtn" class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-semibold text-white whitespace-nowrap" style="background:#8C0712;">Sair</button>
+          <button id="themeToggleBtn" class="p-1.5 sm:p-2 rounded-lg text-sm leading-none transition" style="background:#FFFFFF;border:1px solid #E2E8F0;cursor:pointer" title="Alternar tema">☀️</button>
+          <button id="headerLogoutBtn" class="px-2 sm:px-3 py-1 rounded-lg text-[11px] sm:text-xs font-semibold text-white whitespace-nowrap" style="background:#EF4444;">Sair</button>
         </div>
       </div>
     </div>
 
     <!-- Month Selector -->
     <div class="flex items-center mb-4" style="justify-content:space-between">
-      <button id="mesAnteriorBtn" class="p-2 sm:p-3 rounded-lg hover:bg-slate-800 transition flex-shrink-0" style="background:#0D0D0D;border:1px solid #334155;cursor:pointer">
+      <button id="mesAnteriorBtn" class="p-2 sm:p-3 rounded-lg hover:bg-slate-100 transition flex-shrink-0" style="background:#FFFFFF;border:1px solid #E2E8F0;cursor:pointer">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
       </button>
-      <span id="mesAtualLabel" class="text-sm sm:text-base font-bold text-slate-50 text-center flex-1"></span>
-      <button id="mesProximoBtn" class="p-2 sm:p-3 rounded-lg hover:bg-slate-800 transition flex-shrink-0" style="background:#0D0D0D;border:1px solid #334155;cursor:pointer">
+      <span id="mesAtualLabel" class="text-sm sm:text-base font-bold text-slate-800 text-center flex-1"></span>
+      <button id="mesProximoBtn" class="p-2 sm:p-3 rounded-lg hover:bg-slate-100 transition flex-shrink-0" style="background:#FFFFFF;border:1px solid #E2E8F0;cursor:pointer">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
       </button>
     </div>
 
     <!-- Tabs -->
-    <div class="flex border-b border-gray-800 mb-6 gap-0 sm:gap-1">
+    <div class="flex border-b border-slate-200 mb-6 gap-0 sm:gap-1">
       <button class="tab-btn active flex-1 sm:flex-none text-center text-[13px] sm:text-sm whitespace-nowrap px-1 sm:px-4 py-3 sm:py-3" style="touch-action:manipulation" data-tab="dashboard"><span class="block sm:inline text-base sm:text-sm leading-tight">📊</span><span class="block text-[9px] sm:hidden mt-0.5">Visão Geral</span><span class="hidden sm:inline"> Visão Geral</span></button>
       <button class="tab-btn flex-1 sm:flex-none text-center text-[13px] sm:text-sm whitespace-nowrap px-1 sm:px-4 py-3 sm:py-3" style="touch-action:manipulation" data-tab="entradas"><span class="block sm:inline text-base sm:text-sm leading-tight">💰</span><span class="block text-[9px] sm:hidden mt-0.5">Entradas</span><span class="hidden sm:inline"> Entradas</span></button>
       <button class="tab-btn flex-1 sm:flex-none text-center text-[13px] sm:text-sm whitespace-nowrap px-1 sm:px-4 py-3 sm:py-3" style="touch-action:manipulation" data-tab="despesas"><span class="block sm:inline text-base sm:text-sm leading-tight">💳</span><span class="block text-[9px] sm:hidden mt-0.5">Despesas</span><span class="hidden sm:inline"> Despesas</span></button>
@@ -313,19 +274,19 @@
 
       <!-- Row 2: Total Entradas | Total Despesas -->
       <div class="grid grid-cols-2 gap-3 mb-6">
-        <div class="stat-card border-l-4 border-l-[#55E088]">
+        <div class="stat-card border-l-4 border-l-[#10B981]">
           <div class="stat-label">Total Entradas</div>
-          <div class="text-lg sm:text-xl font-bold text-[#55E088] mt-1" id="dispTotalEntradas">R$ 0,00</div>
+          <div class="text-lg sm:text-xl font-bold text-[#10B981] mt-1" id="dispTotalEntradas">R$ 0,00</div>
         </div>
-        <div class="stat-card border-l-4 border-l-[#F20C0C]">
+        <div class="stat-card border-l-4 border-l-[#EF4444]">
           <div class="stat-label">Total Despesas</div>
-          <div class="text-lg sm:text-xl font-bold text-[#F20C0C] mt-1" id="dispTotalDespesas">R$ 0,00</div>
+          <div class="text-lg sm:text-xl font-bold text-[#EF4444] mt-1" id="dispTotalDespesas">R$ 0,00</div>
         </div>
       </div>
 
       <!-- Comparativo chart -->
       <div class="card mb-6">
-        <h2 class="text-sm font-bold text-slate-50 mb-4">Comparativo: Entradas vs Despesas</h2>
+        <h2 class="text-sm font-bold text-slate-800 mb-4">Comparativo: Entradas vs Despesas</h2>
         <div class="relative h-48 sm:h-64">
           <canvas id="chartComparativo"></canvas>
         </div>
@@ -333,19 +294,19 @@
 
       <!-- Entradas list -->
       <div class="card mb-6">
-        <h2 class="text-sm font-bold text-slate-50 mb-4">Entradas</h2>
+        <h2 class="text-sm font-bold text-slate-800 mb-4">Entradas</h2>
         <div id="dashboardEntradasLista" class="space-y-2"></div>
       </div>
 
       <!-- Despesas list -->
       <div class="card mb-6">
-        <h2 class="text-sm font-bold text-slate-50 mb-4">Despesas</h2>
+        <h2 class="text-sm font-bold text-slate-800 mb-4">Despesas</h2>
         <div id="dashboardDespesasLista" class="space-y-2"></div>
       </div>
 
       <!-- Distribuição chart -->
       <div class="card mb-6">
-        <h2 class="text-sm font-bold text-slate-50 mb-4">Distribuição das Despesas</h2>
+        <h2 class="text-sm font-bold text-slate-800 mb-4">Distribuição das Despesas</h2>
         <div class="relative h-48 sm:h-64">
           <canvas id="chartDespesas"></canvas>
         </div>
@@ -360,7 +321,7 @@
         <!-- Form -->
         <div class="lg:col-span-1">
           <div class="card">
-            <h2 class="text-sm font-bold text-slate-50 mb-5" id="entradasFormTitle">Nova Entrada</h2>
+            <h2 class="text-sm font-bold text-slate-800 mb-5" id="entradasFormTitle">Nova Entrada</h2>
             <div class="space-y-4">
               <div>
                 <label class="stat-label block mb-1.5">Descrição</label>
@@ -376,24 +337,24 @@
               </div>
             </div>
             <!-- Exemplos de Entradas -->
-            <details class="mt-4" style="border:1px solid #334155;border-radius:0.75rem;overflow:hidden">
-              <summary class="px-4 py-3 text-sm font-semibold text-[#94A3B8] cursor-pointer list-none flex items-center justify-between hover:text-[#e2e8f0] transition" style="background:#0D0D0D">
+            <details class="mt-4" style="border:1px solid #E2E8F0;border-radius:0.75rem;overflow:hidden">
+              <summary class="px-4 py-3 text-sm font-semibold text-slate-400 cursor-pointer list-none flex items-center justify-between hover:text-slate-800 transition" style="background:#FFFFFF">
                 <span style="font-style:italic">EXEMPLOS</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform"><polyline points="6 9 12 15 18 9"/></svg>
               </summary>
-              <div class="px-4 pb-3 text-xs text-[#94A3B8] space-y-0 examples-content">
-                <div class="flex items-center justify-between py-2 font-semibold border-b border-[#334155] text-[#e2e8f0] desc-header">
+              <div class="px-4 pb-3 text-xs text-slate-400 space-y-0 examples-content">
+                <div class="flex items-center justify-between py-2 font-semibold border-b border-slate-200 text-slate-800 desc-header">
                   <span>DESCRIÇÃO</span>
                 </div>
-                <div class="py-2 border-b border-[#334155]">  <span>SALÁRIO LÍQUIDO DE [PESSOA 01]</span></div>
-                <div class="py-2 border-b border-[#334155]">  <span>VALE-ALIMENTAÇÃO DE [PESSOA 01]</span></div>
-                <div class="py-2 border-b border-[#334155]">  <span>VALE-REFEIÇÃO DE [PESSOA 01]</span></div>
-                <div class="py-2 border-b border-[#334155]">  <span>SALÁRIO LÍQUIDO DE [PESSOA 02]</span></div>
-                <div class="py-2 border-b border-[#334155]">  <span>VALE-ALIMENTAÇÃO DE [PESSOA 02]</span></div>
-                <div class="py-2 border-b border-[#334155]">  <span>VALE-REFEIÇÃO DE [PESSOA 02]</span></div>
-                <div class="py-2 border-b border-[#334155]">  <span>OUTRAS ENTRADAS 01 (AVON, UBER...)</span></div>
-                <div class="py-2 border-b border-[#334155]">  <span>OUTRAS ENTRADAS 02 (COMISSÕES, BÔNUS...)</span></div>
-                <div class="py-2 border-b border-[#334155]">  <span>OUTRAS ENTRADAS 03 (ALUGUEL, AULAS...)</span></div>
+                <div class="py-2 border-b border-slate-200">  <span>SALÁRIO LÍQUIDO DE [PESSOA 01]</span></div>
+                <div class="py-2 border-b border-slate-200">  <span>VALE-ALIMENTAÇÃO DE [PESSOA 01]</span></div>
+                <div class="py-2 border-b border-slate-200">  <span>VALE-REFEIÇÃO DE [PESSOA 01]</span></div>
+                <div class="py-2 border-b border-slate-200">  <span>SALÁRIO LÍQUIDO DE [PESSOA 02]</span></div>
+                <div class="py-2 border-b border-slate-200">  <span>VALE-ALIMENTAÇÃO DE [PESSOA 02]</span></div>
+                <div class="py-2 border-b border-slate-200">  <span>VALE-REFEIÇÃO DE [PESSOA 02]</span></div>
+                <div class="py-2 border-b border-slate-200">  <span>OUTRAS ENTRADAS 01 (AVON, UBER...)</span></div>
+                <div class="py-2 border-b border-slate-200">  <span>OUTRAS ENTRADAS 02 (COMISSÕES, BÔNUS...)</span></div>
+                <div class="py-2 border-b border-slate-200">  <span>OUTRAS ENTRADAS 03 (ALUGUEL, AULAS...)</span></div>
               </div>
             </details>
           </div>
@@ -402,8 +363,8 @@
         <div class="lg:col-span-2">
           <div class="card">
             <div class="flex items-center justify-between mb-4">
-              <h2 class="text-sm font-bold text-slate-50">Lista de Entradas</h2>
-              <span class="text-xs text-[#94A3B8] font-medium">Total: <span id="entradasTotal" class="text-[#55E088]">R$ 0,00</span></span>
+              <h2 class="text-sm font-bold text-slate-800">Lista de Entradas</h2>
+              <span class="text-xs text-[#94A3B8] font-medium">Total: <span id="entradasTotal" class="text-[#10B981]">R$ 0,00</span></span>
             </div>
             <div id="entradasLista" class="space-y-2"></div>
           </div>
@@ -419,7 +380,7 @@
         <!-- Form -->
         <div class="lg:col-span-1">
           <div class="card">
-            <h2 class="text-sm font-bold text-slate-50 mb-5" id="despesasFormTitle">Nova Despesa</h2>
+            <h2 class="text-sm font-bold text-slate-800 mb-5" id="despesasFormTitle">Nova Despesa</h2>
             <div class="space-y-4">
               <div>
                 <label class="stat-label block mb-1.5">Descrição</label>
@@ -432,8 +393,8 @@
               <div>
                 <label class="stat-label block mb-1.5">Tipo</label>
                 <div class="flex gap-2">
-                  <button id="tipoEssencialBtn" class="flex-1 py-2 rounded-lg text-sm font-semibold border transition-all" style="background:#0D0D0D;border-color:#12823B;color:#55E088">Essencial</button>
-                  <button id="tipoNaoEssencialBtn" class="flex-1 py-2 rounded-lg text-sm font-semibold border transition-all" style="background:#0D0D0D;border-color:#334155;color:#94A3B8">Não Essencial</button>
+                  <button id="tipoEssencialBtn" class="flex-1 py-2 rounded-lg text-sm font-semibold border transition-all" style="background:#FFFFFF;border-color:#10B981;color:#10B981">Essencial</button>
+                  <button id="tipoNaoEssencialBtn" class="flex-1 py-2 rounded-lg text-sm font-semibold border transition-all" style="background:#FFFFFF;border-color:#E2E8F0;color:#64748B">Não Essencial</button>
                 </div>
                 <input type="hidden" id="despesaTipo" value="essencial" />
               </div>
@@ -443,42 +404,42 @@
               </div>
             </div>
             <!-- Exemplos de Despesas -->
-            <details class="mt-4" style="border:1px solid #334155;border-radius:0.75rem;overflow:hidden">
-              <summary class="px-4 py-3 text-sm font-semibold text-[#94A3B8] cursor-pointer list-none flex items-center justify-between hover:text-[#e2e8f0] transition" style="background:#0D0D0D">
+            <details class="mt-4" style="border:1px solid #E2E8F0;border-radius:0.75rem;overflow:hidden">
+              <summary class="px-4 py-3 text-sm font-semibold text-slate-400 cursor-pointer list-none flex items-center justify-between hover:text-slate-800 transition" style="background:#FFFFFF">
                 <span style="font-style:italic">EXEMPLOS</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform"><polyline points="6 9 12 15 18 9"/></svg>
               </summary>
-              <div class="px-4 pb-3 text-xs text-[#94A3B8] space-y-0 examples-content">
-                <div class="py-2 font-semibold border-b border-[#334155] text-[#55E088]">ESSENCIAIS</div>
-                <div class="py-2 border-b border-[#334155]">MORADIA (ALUGUEL/FINANCIAMENTO)</div>
-                <div class="py-2 border-b border-[#334155]">CONDOMÍNIO</div>
-                <div class="py-2 border-b border-[#334155]">SUPERMERCADO (VALOR MÉDIO)</div>
-                <div class="py-2 border-b border-[#334155]">ÁGUA (INCLUSO NO CONDOMÍNIO?)</div>
-                <div class="py-2 border-b border-[#334155]">LUZ (INCLUSO NO CONDOMÍNIO?)</div>
-                <div class="py-2 border-b border-[#334155]">GÁS (INCLUSO NO CONDOMÍNIO?)</div>
-                <div class="py-2 border-b border-[#334155]">IPTU (INCLUSO NO CONDOMÍNIO?)</div>
-                <div class="py-2 border-b border-[#334155]">PLANO DE SAÚDE (INCLUSO NOS BENEFÍCIOS DO TRABALHO?)</div>
-                <div class="py-2 border-b border-[#334155]">SEGURO DE VIDA (INCLUSO NOS BENEFÍCIOS DO TRABALHO?)</div>
-                <div class="py-2 border-b border-[#334155]">INVESTIMENTOS (OBRIGATÓRIO INVESTIR UM VALOR TODO MÊS!)</div>
-                <div class="py-2 border-b border-[#334155]">OUTRAS DESPESAS ESSENCIAIS 01</div>
-                <div class="py-2 border-b border-[#334155]">OUTRAS DESPESAS ESSENCIAIS 02</div>
-                <div class="py-2 font-semibold border-b border-[#334155] text-[#F20C0C]">NÃO ESSENCIAIS</div>
-                <div class="py-2 border-b border-[#334155]">CARTÃO DE CRÉDITO (EVITE USAR!)</div>
-                <div class="py-2 border-b border-[#334155]">COMBUSTÍVEL</div>
-                <div class="py-2 border-b border-[#334155]">FARMÁCIA</div>
-                <div class="py-2 border-b border-[#334155]">GASTOS COM ANIMAIS</div>
-                <div class="py-2 border-b border-[#334155]">GASTOS IMPREVISTOS (VALOR MÉDIO)</div>
-                <div class="py-2 border-b border-[#334155]">GASTOS COM TRANSPORTE (ÔNIBUS/TREM/UBER)</div>
-                <div class="py-2 border-b border-[#334155]">GASTOS COM VEÍCULO (CARRO/MOTO/FINANCIAMENTO)</div>
-                <div class="py-2 border-b border-[#334155]">INTERNET RESIDENCIAL</div>
-                <div class="py-2 border-b border-[#334155]">NETFLIX/AMAZON/NET</div>
-                <div class="py-2 border-b border-[#334155]">PADARIA/FEIRA</div>
-                <div class="py-2 border-b border-[#334155]">SAÍDAS/CINEMA/LAZER</div>
-                <div class="py-2 border-b border-[#334155]">SALÃO/MANICURE/DEPILAÇÃO</div>
-                <div class="py-2 border-b border-[#334155]">TARIFAS BANCÁRIAS (PEÇA ISENÇÃO DESSAS TAXAS NO BANCO!)</div>
-                <div class="py-2 border-b border-[#334155]">TELEFONIA/CELULAR</div>
-                <div class="py-2 border-b border-[#334155]">OUTRAS DESPESAS 01 (IPVA, SEGURO, TRATAMENTO MÉDICO...)</div>
-                <div class="py-2 border-b border-[#334155]">OUTRAS DESPESAS 02 (CURSOS, INGLÊS...)</div>
+              <div class="px-4 pb-3 text-xs text-slate-400 space-y-0 examples-content">
+                <div class="py-2 font-semibold border-b border-slate-200 text-[#10B981]">ESSENCIAIS</div>
+                <div class="py-2 border-b border-slate-200">MORADIA (ALUGUEL/FINANCIAMENTO)</div>
+                <div class="py-2 border-b border-slate-200">CONDOMÍNIO</div>
+                <div class="py-2 border-b border-slate-200">SUPERMERCADO (VALOR MÉDIO)</div>
+                <div class="py-2 border-b border-slate-200">ÁGUA (INCLUSO NO CONDOMÍNIO?)</div>
+                <div class="py-2 border-b border-slate-200">LUZ (INCLUSO NO CONDOMÍNIO?)</div>
+                <div class="py-2 border-b border-slate-200">GÁS (INCLUSO NO CONDOMÍNIO?)</div>
+                <div class="py-2 border-b border-slate-200">IPTU (INCLUSO NO CONDOMÍNIO?)</div>
+                <div class="py-2 border-b border-slate-200">PLANO DE SAÚDE (INCLUSO NOS BENEFÍCIOS DO TRABALHO?)</div>
+                <div class="py-2 border-b border-slate-200">SEGURO DE VIDA (INCLUSO NOS BENEFÍCIOS DO TRABALHO?)</div>
+                <div class="py-2 border-b border-slate-200">INVESTIMENTOS (OBRIGATÓRIO INVESTIR UM VALOR TODO MÊS!)</div>
+                <div class="py-2 border-b border-slate-200">OUTRAS DESPESAS ESSENCIAIS 01</div>
+                <div class="py-2 border-b border-slate-200">OUTRAS DESPESAS ESSENCIAIS 02</div>
+                <div class="py-2 font-semibold border-b border-slate-200 text-[#EF4444]">NÃO ESSENCIAIS</div>
+                <div class="py-2 border-b border-slate-200">CARTÃO DE CRÉDITO (EVITE USAR!)</div>
+                <div class="py-2 border-b border-slate-200">COMBUSTÍVEL</div>
+                <div class="py-2 border-b border-slate-200">FARMÁCIA</div>
+                <div class="py-2 border-b border-slate-200">GASTOS COM ANIMAIS</div>
+                <div class="py-2 border-b border-slate-200">GASTOS IMPREVISTOS (VALOR MÉDIO)</div>
+                <div class="py-2 border-b border-slate-200">GASTOS COM TRANSPORTE (ÔNIBUS/TREM/UBER)</div>
+                <div class="py-2 border-b border-slate-200">GASTOS COM VEÍCULO (CARRO/MOTO/FINANCIAMENTO)</div>
+                <div class="py-2 border-b border-slate-200">INTERNET RESIDENCIAL</div>
+                <div class="py-2 border-b border-slate-200">NETFLIX/AMAZON/NET</div>
+                <div class="py-2 border-b border-slate-200">PADARIA/FEIRA</div>
+                <div class="py-2 border-b border-slate-200">SAÍDAS/CINEMA/LAZER</div>
+                <div class="py-2 border-b border-slate-200">SALÃO/MANICURE/DEPILAÇÃO</div>
+                <div class="py-2 border-b border-slate-200">TARIFAS BANCÁRIAS (PEÇA ISENÇÃO DESSAS TAXAS NO BANCO!)</div>
+                <div class="py-2 border-b border-slate-200">TELEFONIA/CELULAR</div>
+                <div class="py-2 border-b border-slate-200">OUTRAS DESPESAS 01 (IPVA, SEGURO, TRATAMENTO MÉDICO...)</div>
+                <div class="py-2 border-b border-slate-200">OUTRAS DESPESAS 02 (CURSOS, INGLÊS...)</div>
                 <div class="py-2">OUTRAS DESPESAS 03 (ITENS DIVERSOS)</div>
               </div>
             </details>
@@ -489,24 +450,24 @@
           <!-- Essenciais -->
           <div class="card mb-4">
             <div class="flex items-center justify-between mb-4">
-              <h2 class="text-sm font-bold text-slate-50">Despesas Essenciais</h2>
-              <span class="text-xs text-[#94A3B8] font-medium">Total: <span id="despesasEssenciaisTotal" class="text-[#F20C0C]">R$ 0,00</span></span>
+              <h2 class="text-sm font-bold text-slate-800">Despesas Essenciais</h2>
+              <span class="text-xs text-[#94A3B8] font-medium">Total: <span id="despesasEssenciaisTotal" class="text-[#EF4444]">R$ 0,00</span></span>
             </div>
             <div id="despesasEssenciaisLista" class="space-y-2"></div>
           </div>
           <!-- Não Essenciais -->
           <div class="card">
             <div class="flex items-center justify-between mb-4">
-              <h2 class="text-sm font-bold text-slate-50">Despesas Não Essenciais</h2>
-              <span class="text-xs text-[#94A3B8] font-medium">Total: <span id="despesasNaoEssenciaisTotal" class="text-[#F20C0C]">R$ 0,00</span></span>
+              <h2 class="text-sm font-bold text-slate-800">Despesas Não Essenciais</h2>
+              <span class="text-xs text-[#94A3B8] font-medium">Total: <span id="despesasNaoEssenciaisTotal" class="text-[#EF4444]">R$ 0,00</span></span>
             </div>
             <div id="despesasNaoEssenciaisLista" class="space-y-2"></div>
           </div>
           <!-- Total Geral -->
           <div class="card mt-4">
             <div class="flex items-center justify-between">
-              <h2 class="text-sm font-bold text-slate-50">Total Geral Despesas</h2>
-              <span class="text-lg font-bold text-[#F20C0C]" id="despesasGeralTotal">R$ 0,00</span>
+              <h2 class="text-sm font-bold text-slate-800">Total Geral Despesas</h2>
+              <span class="text-lg font-bold text-[#EF4444]" id="despesasGeralTotal">R$ 0,00</span>
             </div>
           </div>
         </div>
@@ -522,11 +483,11 @@
         <div class="lg:col-span-2">
           <div class="card">
             <div class="flex items-center justify-between mb-5">
-              <button id="calMesAnterior" class="text-[#94A3B8] hover:text-white transition p-1" style="touch-action:manipulation">
+              <button id="calMesAnterior" class="text-[#94A3B8] hover:text-slate-800 transition p-1" style="touch-action:manipulation">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
               </button>
-              <h2 class="text-sm font-bold text-slate-50" id="calMesLabel">Janeiro 2025</h2>
-              <button id="calMesSeguinte" class="text-[#94A3B8] hover:text-white transition p-1" style="touch-action:manipulation">
+              <h2 class="text-sm font-bold text-slate-800" id="calMesLabel">Janeiro 2025</h2>
+              <button id="calMesSeguinte" class="text-[#94A3B8] hover:text-slate-800 transition p-1" style="touch-action:manipulation">
                 <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
               </button>
             </div>
@@ -545,7 +506,7 @@
         <!-- Day details -->
         <div class="lg:col-span-1">
           <div class="card" id="calDetalhes">
-            <h2 class="text-sm font-bold text-slate-50 mb-4" id="calDiaLabel">Selecione um dia</h2>
+            <h2 class="text-sm font-bold text-slate-800 mb-4" id="calDiaLabel">Selecione um dia</h2>
             <div id="calSemDia" class="text-xs text-[#94A3B8]">Clique em um dia no calendário para ver ou adicionar gastos fixos.</div>
             <div id="calComDia" style="display:none">
               <div class="space-y-3 mb-4">
@@ -567,15 +528,15 @@
       <!-- All fixed expenses list -->
       <div class="card mt-6">
         <div class="flex items-center justify-between mb-4">
-          <h2 class="text-sm font-bold text-slate-50">Gastos Fixos do Mês</h2>
-          <span class="text-xs text-[#94A3B8] font-medium">Total: <span id="calGastosFixosTotal" class="text-[#F20C0C]">R$ 0,00</span></span>
+          <h2 class="text-sm font-bold text-slate-800">Gastos Fixos do Mês</h2>
+          <span class="text-xs text-[#94A3B8] font-medium">Total: <span id="calGastosFixosTotal" class="text-[#EF4444]">R$ 0,00</span></span>
         </div>
         <div id="calGastosFixosLista" class="space-y-2"></div>
       </div>
       <!-- Notes -->
       <div class="card mt-6">
-        <h2 class="text-sm font-bold text-slate-50 mb-3 flex items-center gap-1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Anotações</h2>
-        <textarea id="calcNotas" class="w-full rounded-lg text-sm text-[#e2e8f0] placeholder-[#94A3B8] resize-none" style="background:#0D0D0D;border:1px solid #334155;padding:0.75rem;min-height:80px;outline:none" placeholder="Escreva suas anotações aqui..."></textarea>
+        <h2 class="text-sm font-bold text-slate-800 mb-3 flex items-center gap-1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Anotações</h2>
+        <textarea id="calcNotas" class="w-full rounded-lg text-sm text-slate-800 placeholder-slate-400 resize-none" style="background:#FFFFFF;border:1px solid #E2E8F0;padding:0.75rem;min-height:80px;outline:none" placeholder="Escreva suas anotações aqui..."></textarea>
         <button id="salvarNotasBtn" class="btn-primary w-full mt-3">Salvar Anotações</button>
         <div id="calcNotasLista" class="mt-4 space-y-2"></div>
       </div>
@@ -586,30 +547,30 @@
     <!-- ================================================================ -->
     <div id="tab-calc" class="tab-content">
       <div class="card mx-3 sm:mx-auto mb-4 sm:max-w-sm">
-        <h2 class="text-sm font-bold text-slate-50 mb-4 flex items-center gap-1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="8" y2="18"/><line x1="12" y1="18" x2="12" y2="18"/></svg> Calculadora</h2>
-        <div class="bg-[#0D0D0D] border border-[#334155] rounded-xl p-4">
-          <input type="text" id="calcDisplay" value="0" inputmode="decimal" class="text-right text-2xl font-bold py-3 px-4 mb-4 rounded-lg min-h-[56px]" style="background:#0D0D0D;border:1px solid #334155;color:#F8FAFC;width:100%;outline:none" />
+        <h2 class="text-sm font-bold text-slate-800 mb-4 flex items-center gap-1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="2" width="16" height="20" rx="2"/><line x1="8" y1="6" x2="16" y2="6"/><line x1="8" y1="10" x2="8" y2="10"/><line x1="12" y1="10" x2="12" y2="10"/><line x1="16" y1="10" x2="16" y2="10"/><line x1="8" y1="14" x2="8" y2="14"/><line x1="12" y1="14" x2="12" y2="14"/><line x1="16" y1="14" x2="16" y2="14"/><line x1="8" y1="18" x2="8" y2="18"/><line x1="12" y1="18" x2="12" y2="18"/></svg> Calculadora</h2>
+        <div class="bg-gray-50 border border-gray-200 rounded-xl p-4">
+          <input type="text" id="calcDisplay" value="0" inputmode="decimal" class="text-right text-2xl font-bold py-3 px-4 mb-4 rounded-lg min-h-[56px]" style="background:#FFFFFF;border:1px solid #E2E8F0;color:#1E293B;width:100%;outline:none" />
           <div class="grid grid-cols-4 gap-2">
-            <button class="calc-btn text-lg font-semibold" style="background:#1E293B;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="7">7</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#1E293B;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="8">8</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#1E293B;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="9">9</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#8C0712;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="/">÷</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#1E293B;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="4">4</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#1E293B;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="5">5</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#1E293B;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="6">6</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#8C0712;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="*">×</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#1E293B;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="1">1</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#1E293B;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="2">2</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#1E293B;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="3">3</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#8C0712;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="-">−</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#1E293B;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="0">0</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#1E293B;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc=".">,</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#12823B;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="=">=</button>
-            <button class="calc-btn text-lg font-semibold" style="background:#8C0712;color:#F8FAFC;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="+">+</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#F1F5F9;color:#1E293B;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="7">7</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#F1F5F9;color:#1E293B;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="8">8</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#F1F5F9;color:#1E293B;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="9">9</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#EF4444;color:#FFFFFF;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="/">÷</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#F1F5F9;color:#1E293B;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="4">4</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#F1F5F9;color:#1E293B;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="5">5</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#F1F5F9;color:#1E293B;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="6">6</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#EF4444;color:#FFFFFF;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="*">×</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#F1F5F9;color:#1E293B;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="1">1</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#F1F5F9;color:#1E293B;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="2">2</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#F1F5F9;color:#1E293B;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="3">3</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#EF4444;color:#FFFFFF;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="-">−</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#F1F5F9;color:#1E293B;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="0">0</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#F1F5F9;color:#1E293B;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc=".">,</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#10B981;color:#FFFFFF;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="=">=</button>
+            <button class="calc-btn text-lg font-semibold" style="background:#10B981;color:#FFFFFF;border:none;border-radius:0.5rem;padding:0.8rem 0;cursor:pointer;transition:background 0.15s" data-calc="+">+</button>
           </div>
           <div class="grid grid-cols-2 gap-2 mt-2">
-            <button id="calcClear" class="py-2 rounded-lg text-sm font-semibold text-white" style="background:#1E293B;border:1px solid #334155">C</button>
-            <button id="calcBackspace" class="py-2 rounded-lg text-sm font-semibold text-white" style="background:#1E293B;border:1px solid #334155">⌫</button>
+            <button id="calcClear" class="py-2 rounded-lg text-sm font-semibold text-slate-800" style="background:#F1F5F9;border:1px solid #E2E8F0">C</button>
+            <button id="calcBackspace" class="py-2 rounded-lg text-sm font-semibold text-slate-800" style="background:#F1F5F9;border:1px solid #E2E8F0">⌫</button>
           </div>
         </div>
       </div>
@@ -648,11 +609,11 @@
     const toastContainer = document.getElementById('toastContainer');
 
     function mostrarToast(msg, tipo) {
-      const cores = { erro: '#F20C0C', sucesso: '#55E088', aviso: '#94A3B8' };
+      const cores = { erro: '#EF4444', sucesso: '#10B981', aviso: '#94A3B8' };
       const cor = cores[tipo] || '#94A3B8';
       const el = document.createElement('div');
       el.className = 'flex items-center gap-3 px-4 py-3 rounded-lg border text-sm font-medium shadow-lg animate-slide-in';
-      el.style.cssText = 'background:#0D0D0D;border-color:' + cor + ';color:#e2e8f0;border-width:1px;';
+      el.style.cssText = 'background:#FFFFFF;border-color:' + cor + ';color:#1E293B;border-width:1px;';
       el.innerHTML = '<span style="color:' + cor + '">●</span> ' + msg;
       toastContainer.style.display = 'flex';
       toastContainer.appendChild(el);
@@ -890,7 +851,7 @@
           datasets: [{
             label: 'Valor (R$)',
             data: [totais.totalEntradas, totais.totalDespesas, totais.saldo],
-            backgroundColor: ['#55E088', '#F20C0C', '#94A3B8'],
+            backgroundColor: ['#10B981', '#EF4444', '#94A3B8'],
             borderRadius: 4,
           }]
         },
@@ -900,10 +861,10 @@
           plugins: {
             legend: { display: false },
             tooltip: {
-              backgroundColor: '#0D0D0D',
-              titleColor: '#e2e8f0',
-              bodyColor: '#e2e8f0',
-              borderColor: '#334155',
+              backgroundColor: '#FFFFFF',
+              titleColor: '#1E293B',
+              bodyColor: '#1E293B',
+              borderColor: '#E2E8F0',
               borderWidth: 1,
               padding: 10,
               callbacks: {
@@ -913,7 +874,7 @@
           },
           scales: {
             x: { ticks: { color: '#94A3B8' }, grid: { display: false } },
-            y: { ticks: { color: '#334155', callback: (v) => 'R$' + v.toFixed(0) }, grid: { display: false } }
+            y: { ticks: { color: '#94A3B8', callback: (v) => 'R$' + v.toFixed(0) }, grid: { color: 'rgba(148,163,184,0.2)', drawBorder: false } }
           }
         }
       });
@@ -926,7 +887,7 @@
           labels: ['Essenciais', 'Não Essenciais'],
           datasets: [{
             data: [totais.despesasEssenciais, totais.despesasNaoEssenciais],
-            backgroundColor: ['#8C0712', '#334155'],
+            backgroundColor: ['#EF4444', '#94A3B8'],
             borderWidth: 0,
           }]
         },
@@ -936,13 +897,13 @@
           plugins: {
             legend: {
               position: 'bottom',
-              labels: { color: document.body.classList.contains('light-mode') ? '#2F2F2F' : '#94A3B8', padding: 14, font: { size: 14 } }
+              labels: { color: '#64748B', padding: 14, font: { size: 14 } }
             },
             tooltip: {
-              backgroundColor: '#0D0D0D',
-              titleColor: '#e2e8f0',
-              bodyColor: '#e2e8f0',
-              borderColor: '#334155',
+              backgroundColor: '#FFFFFF',
+              titleColor: '#1E293B',
+              bodyColor: '#1E293B',
+              borderColor: '#E2E8F0',
               borderWidth: 1,
               padding: 10,
               callbacks: {
@@ -966,8 +927,6 @@
       }
       if (chartDespesas) {
         chartDespesas.data.datasets[0].data = [totais.despesasEssenciais, totais.despesasNaoEssenciais];
-        const corLegenda = document.body.classList.contains('light-mode') ? '#2F2F2F' : '#94A3B8';
-        chartDespesas.options.plugins.legend.labels.color = corLegenda;
         chartDespesas.update('none');
       }
     }
@@ -981,8 +940,7 @@
       document.getElementById('dispTotalDespesas').textContent = fmtB(totais.totalDespesas);
       const saldoEl = document.getElementById('dispSaldo');
       saldoEl.textContent = (totais.saldo >= 0 ? '' : '-') + fmtB(totais.saldo);
-      saldoEl.style.color = totais.saldo >= 0 ? '#55E088' : '#F20C0C';
-      document.getElementById('dispReserva').textContent = fmtB(totais.reserva);
+      saldoEl.style.color = totais.saldo >= 0 ? '#10B981' : '#EF4444';      document.getElementById('dispReserva').textContent = fmtB(totais.reserva);
 
       const entradas = getEntradas();
       const despesas = getDespesas();
@@ -990,12 +948,12 @@
       // Entradas breakdown
       const entLista = document.getElementById('dashboardEntradasLista');
       if (entradas.length === 0) {
-        entLista.innerHTML = '<p class="text-gray-600 text-sm text-center py-4">Nenhuma entrada cadastrada.</p>';
+        entLista.innerHTML = '<p class="text-slate-400 text-sm text-center py-4">Nenhuma entrada cadastrada.</p>';
       } else {
         let html = '';
         const sorted = [...entradas].sort((a, b) => b.valor - a.valor);
         for (const e of sorted) {
-          html += '<div class="entry-card"><span class="desc-label flex-1">' + e.descricao + '</span><span class="value-label text-[#55E088]">' + fmtB(e.valor) + '</span></div>';
+          html += '<div class="entry-card"><span class="desc-label flex-1">' + e.descricao + '</span><span class="value-label text-[#10B981]">' + fmtB(e.valor) + '</span></div>';
         }
         entLista.innerHTML = html;
       }
@@ -1003,12 +961,12 @@
       // Despesas breakdown
       const despLista = document.getElementById('dashboardDespesasLista');
       if (despesas.length === 0) {
-        despLista.innerHTML = '<p class="text-gray-600 text-sm text-center py-4">Nenhuma despesa cadastrada.</p>';
+        despLista.innerHTML = '<p class="text-slate-400 text-sm text-center py-4">Nenhuma despesa cadastrada.</p>';
       } else {
         let html = '';
         const sorted = [...despesas].sort((a, b) => b.valor - a.valor);
         for (const d of sorted) {
-          html += '<div class="entry-card"><span class="desc-label flex-1">' + d.descricao + '</span><span class="value-label text-[#F20C0C]">' + fmtB(d.valor) + '</span></div>';
+          html += '<div class="entry-card"><span class="desc-label flex-1">' + d.descricao + '</span><span class="value-label text-[#EF4444]">' + fmtB(d.valor) + '</span></div>';
         }
         despLista.innerHTML = html;
       }
@@ -1029,13 +987,13 @@
       const entradas = getEntradas();
 
       if (entradas.length === 0) {
-        lista.innerHTML = '<p class="text-gray-600 text-sm text-center py-4">Nenhuma entrada cadastrada.</p>';
+        lista.innerHTML = '<p class="text-slate-400 text-sm text-center py-4">Nenhuma entrada cadastrada.</p>';
         return;
       }
       let html = '';
       const sorted = [...entradas].sort((a, b) => b.valor - a.valor);
       for (const e of sorted) {
-        html += '<div class="entry-card"><span class="desc-label flex-1">' + e.descricao + '</span><span class="value-label text-[#55E088]">' + fmtB(e.valor) + '</span><button class="edit-entrada-btn" data-id="' + e.id + '" title="Editar" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="delete-entrada-btn" data-id="' + e.id + '" title="Excluir" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F20C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
+        html += '<div class="entry-card"><span class="desc-label flex-1">' + e.descricao + '</span><span class="value-label text-[#10B981]">' + fmtB(e.valor) + '</span><button class="edit-entrada-btn" data-id="' + e.id + '" title="Editar" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="delete-entrada-btn" data-id="' + e.id + '" title="Excluir" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
       }
       lista.innerHTML = html;
     }
@@ -1112,17 +1070,14 @@
     let despesaTipoAtual = 'essencial';
 
     function aplicarEstiloTipo(ativo) {
-      const t = document.body.classList.contains('light-mode') ? 'light' : 'dark';
-      const bg = t === 'light' ? '#fafaf8' : '#0D0D0D';
-      const inactBorder = t === 'light' ? '#d8d4cc' : '#334155';
-      const inactColor = t === 'light' ? '#2F2F2F' : '#94A3B8';
       if (ativo === 'essencial') {
-        document.getElementById('tipoEssencialBtn').style.cssText = 'background:' + bg + ';border-color:#12823B;color:#55E088';
-        document.getElementById('tipoNaoEssencialBtn').style.cssText = 'background:' + bg + ';border-color:' + inactBorder + ';color:' + inactColor;
+        document.getElementById('tipoEssencialBtn').style.cssText = 'background:#FFFFFF;border-color:#10B981;color:#10B981;font-weight:600';
+        document.getElementById('tipoNaoEssencialBtn').style.cssText = 'background:#FFFFFF;border-color:#E2E8F0;color:#64748B;font-weight:500';
       } else {
-        document.getElementById('tipoNaoEssencialBtn').style.cssText = 'background:' + bg + ';border-color:#8C0712;color:#F20C0C';
-        document.getElementById('tipoEssencialBtn').style.cssText = 'background:' + bg + ';border-color:' + inactBorder + ';color:' + inactColor;
+        document.getElementById('tipoNaoEssencialBtn').style.cssText = 'background:#FFFFFF;border-color:#EF4444;color:#EF4444;font-weight:600';
+        document.getElementById('tipoEssencialBtn').style.cssText = 'background:#FFFFFF;border-color:#E2E8F0;color:#64748B;font-weight:500';
       }
+    }
     }
     document.getElementById('tipoEssencialBtn').addEventListener('click', () => {
       despesaTipoAtual = 'essencial'; document.getElementById('despesaTipo').value = 'essencial';
@@ -1146,13 +1101,13 @@
       const renderLista = (arr, containerId, tipo) => {
         const container = document.getElementById(containerId);
         if (arr.length === 0) {
-          container.innerHTML = '<p class="text-gray-600 text-sm text-center py-4">Nenhuma despesa ' + (tipo === 'essencial' ? 'essencial' : 'não essencial') + ' cadastrada.</p>';
+          container.innerHTML = '<p class="text-slate-400 text-sm text-center py-4">Nenhuma despesa ' + (tipo === 'essencial' ? 'essencial' : 'não essencial') + ' cadastrada.</p>';
           return;
         }
         let html = '';
         const sorted = [...arr].sort((a, b) => b.valor - a.valor);
         for (const d of sorted) {
-          html += '<div class="entry-card"><span class="desc-label flex-1">' + d.descricao + '</span><span class="value-label text-[#F20C0C]">' + fmtB(d.valor) + '</span><button class="edit-despesa-btn" data-id="' + d.id + '" title="Editar" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="delete-despesa-btn" data-id="' + d.id + '" title="Excluir" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F20C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
+          html += '<div class="entry-card"><span class="desc-label flex-1">' + d.descricao + '</span><span class="value-label text-[#EF4444]">' + fmtB(d.valor) + '</span><button class="edit-despesa-btn" data-id="' + d.id + '" title="Editar" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="delete-despesa-btn" data-id="' + d.id + '" title="Excluir" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#EF4444" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
         }
         container.innerHTML = html;
       };
@@ -1380,7 +1335,7 @@
         const n = notas[i];
         const card = document.createElement('div');
         card.className = 'entry-card p-2 rounded-lg text-xs';
-        card.innerHTML = '<div class="flex items-start justify-between gap-2"><div class="flex-1"><div class="font-semibold text-slate-50 mb-1 whitespace-pre-wrap">' + n.text + '</div><div class="text-[#94A3B8] text-[10px]">' + n.date + '</div></div><button class="del-nota-btn text-[#94A3B8] hover:text-[#F20C0C] transition p-1 flex-shrink-0" data-idx="' + i + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
+        card.innerHTML = '<div class="flex items-start justify-between gap-2"><div class="flex-1"><div class="font-semibold text-slate-800 mb-1 whitespace-pre-wrap">' + n.text + '</div><div class="text-[#94A3B8] text-[10px]">' + n.date + '</div></div><button class="del-nota-btn text-[#94A3B8] hover:text-[#EF4444] transition p-1 flex-shrink-0" data-idx="' + i + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
         calcNotasLista.appendChild(card);
       }
       calcNotasLista.querySelectorAll('.del-nota-btn').forEach(btn => {
@@ -1458,25 +1413,25 @@
     // THEME TOGGLE
     // ================================================================
     function aplicarTema(tema) {
-      if (tema === 'light') {
-        document.body.classList.add('light-mode');
-        document.getElementById('themeToggleBtn').textContent = '☀️';
-        document.getElementById('themeToggleBtn').style.background = '#fafaf8';
-        document.getElementById('themeToggleBtn').style.borderColor = '#d8d4cc';
-      } else {
-        document.body.classList.remove('light-mode');
+      if (tema === 'dark') {
+        document.body.classList.add('dark-mode');
         document.getElementById('themeToggleBtn').textContent = '🌙';
-        document.getElementById('themeToggleBtn').style.background = '#0D0D0D';
+        document.getElementById('themeToggleBtn').style.background = '#1E293B';
         document.getElementById('themeToggleBtn').style.borderColor = '#334155';
+      } else {
+        document.body.classList.remove('dark-mode');
+        document.getElementById('themeToggleBtn').textContent = '☀️';
+        document.getElementById('themeToggleBtn').style.background = '#FFFFFF';
+        document.getElementById('themeToggleBtn').style.borderColor = '#E2E8F0';
       }
-      localStorage.setItem('orgTema', tema);
+      localStorage.setItem('gestaoTema', tema);
     }
 
-    const temaSalvo = localStorage.getItem('orgTema') || 'dark';
+    const temaSalvo = localStorage.getItem('gestaoTema') || 'light';
     aplicarTema(temaSalvo);
 
     document.getElementById('themeToggleBtn').addEventListener('click', () => {
-      const atual = document.body.classList.contains('light-mode') ? 'light' : 'dark';
+      const atual = document.body.classList.contains('dark-mode') ? 'dark' : 'light';
       aplicarTema(atual === 'light' ? 'dark' : 'light');
     });
 
@@ -1579,7 +1534,7 @@
       for (const g of sorted) {
         const card = document.createElement('div');
         card.className = 'entry-card flex items-center justify-between p-2 rounded-lg text-xs';
-        card.innerHTML = '<div class="flex items-center gap-2"><span class="text-[#94A3B8] font-mono font-bold w-5 text-right">' + g.dia + '</span><span class="font-semibold text-slate-50">' + g.descricao + '</span></div><div class="flex items-center gap-2"><span class="text-[#F20C0C] font-bold">' + fmtB(g.valor) + '</span><button class="cal-remover-tudo-btn text-[#94A3B8] hover:text-[#F20C0C] transition p-1" data-id="' + g.id + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
+        card.innerHTML = '<div class="flex items-center gap-2"><span class="text-[#94A3B8] font-mono font-bold w-5 text-right">' + g.dia + '</span><span class="font-semibold text-slate-800">' + g.descricao + '</span></div><div class="flex items-center gap-2"><span class="text-[#EF4444] font-bold">' + fmtB(g.valor) + '</span><button class="cal-remover-tudo-btn text-[#94A3B8] hover:text-[#EF4444] transition p-1" data-id="' + g.id + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
         lista.appendChild(card);
       }
       lista.querySelectorAll('.cal-remover-tudo-btn').forEach(btn => {
@@ -1611,7 +1566,7 @@
         gastos.forEach(g => {
           const card = document.createElement('div');
           card.className = 'entry-card flex items-center justify-between p-2 rounded-lg text-xs';
-          card.innerHTML = '<div><span class="font-semibold text-slate-50">' + g.descricao + '</span></div><div class="flex items-center gap-2"><span class="text-[#F20C0C] font-bold">R$ ' + g.valor.toFixed(2).replace('.', ',') + '</span><button class="cal-remover-btn text-[#94A3B8] hover:text-[#F20C0C] transition p-1" data-id="' + g.id + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
+          card.innerHTML = '<div><span class="font-semibold text-slate-800">' + g.descricao + '</span></div><div class="flex items-center gap-2"><span class="text-[#EF4444] font-bold">R$ ' + g.valor.toFixed(2).replace('.', ',') + '</span><button class="cal-remover-btn text-[#94A3B8] hover:text-[#EF4444] transition p-1" data-id="' + g.id + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
           lista.appendChild(card);
         });
         lista.querySelectorAll('.cal-remover-btn').forEach(btn => {
