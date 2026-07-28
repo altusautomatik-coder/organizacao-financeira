@@ -181,9 +181,11 @@
     body.light-mode button[style*="border-color:#12823B"] { background: #fafaf8 !important; }
     body.light-mode button[style*="border-color:#334155;color:#94A3B8"] { background: #fafaf8 !important; }
     body.light-mode div[style*="border:2px solid #8C0712"] { background: #fafaf8 !important; }
-    body.light-mode .text-\[#94A3B8\] { color: #2F2F2F !important; }
+    body.light-mode [class*="text-\[#94A3B8\]"] { color: #2F2F2F !important; }
     body.light-mode #headerUserEmail { color: #2F2F2F !important; }
-    body.light-mode .placeholder-\[#94A3B8\]::placeholder { color: #2F2F2F !important; }
+    body.light-mode [class*="placeholder-\[#94A3B8\]"]::placeholder { color: #2F2F2F !important; }
+    body.light-mode [style*="color:#94A3B8"] { color: #2F2F2F !important; }
+    body.light-mode [stroke="#94A3B8"] { stroke: #2F2F2F !important; }
     @media (max-width: 480px) {
       input:not([type="range"]):not([type="date"]):not([type="checkbox"]):not([type="radio"]) { padding: 0.55rem 0.75rem; font-size: 16px; }
       .btn-primary, .btn-danger { padding: 0.55rem 1rem; font-size: 0.82rem; }
