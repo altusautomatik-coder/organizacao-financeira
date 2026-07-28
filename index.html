@@ -564,6 +564,14 @@
           </div>
         </div>
       </div>
+      <!-- All fixed expenses list -->
+      <div class="card mt-6">
+        <div class="flex items-center justify-between mb-4">
+          <h2 class="text-sm font-bold text-slate-50">Gastos Fixos do Mês</h2>
+          <span class="text-xs text-[#94A3B8] font-medium">Total: <span id="calGastosFixosTotal" class="text-[#F20C0C]">R$ 0,00</span></span>
+        </div>
+        <div id="calGastosFixosLista" class="space-y-2"></div>
+      </div>
       <!-- Notes -->
       <div class="card mt-6">
         <h2 class="text-sm font-bold text-slate-50 mb-3 flex items-center gap-1.5"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg> Anotações</h2>
@@ -1541,6 +1549,33 @@
       } else {
         esconderDetalhes();
       }
+
+      renderizarGastosFixosLista();
+    }
+
+    function renderizarGastosFixosLista() {
+      const gastos = getGastosFixos();
+      const total = gastos.reduce((s, g) => s + g.valor, 0);
+      document.getElementById('calGastosFixosTotal').textContent = fmtB(total);
+
+      const lista = document.getElementById('calGastosFixosLista');
+      lista.innerHTML = '';
+
+      if (gastos.length === 0) {
+        lista.innerHTML = '<div class="text-xs text-[#94A3B8] text-center py-4">Nenhum gasto fixo cadastrado neste mês.</div>';
+        return;
+      }
+
+      const sorted = [...gastos].sort((a, b) => a.dia - b.dia);
+      for (const g of sorted) {
+        const card = document.createElement('div');
+        card.className = 'entry-card flex items-center justify-between p-2 rounded-lg text-xs';
+        card.innerHTML = '<div class="flex items-center gap-2"><span class="text-[#94A3B8] font-mono font-bold w-5 text-right">' + g.dia + '</span><span class="font-semibold text-slate-50">' + g.descricao + '</span></div><div class="flex items-center gap-2"><span class="text-[#F20C0C] font-bold">' + fmtB(g.valor) + '</span><button class="cal-remover-tudo-btn text-[#94A3B8] hover:text-[#F20C0C] transition p-1" data-id="' + g.id + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
+        lista.appendChild(card);
+      }
+      lista.querySelectorAll('.cal-remover-tudo-btn').forEach(btn => {
+        btn.addEventListener('click', () => removerGastoFixo(btn.dataset.id));
+      });
     }
 
     function selecionarDia(dia) {
