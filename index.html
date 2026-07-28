@@ -222,16 +222,8 @@
     <!-- TAB 1: DASHBOARD -->
     <!-- ================================================================ -->
     <div id="tab-dashboard" class="tab-content active">
-      <!-- Summary Cards -->
-      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
-        <div class="stat-card border-l-4 border-l-[#55E088]">
-          <div class="stat-label">Total Entradas</div>
-          <div class="text-lg sm:text-xl font-bold text-[#55E088] mt-1" id="dispTotalEntradas">R$ 0,00</div>
-        </div>
-        <div class="stat-card border-l-4 border-l-[#F20C0C]">
-          <div class="stat-label">Total Despesas</div>
-          <div class="text-lg sm:text-xl font-bold text-[#F20C0C] mt-1" id="dispTotalDespesas">R$ 0,00</div>
-        </div>
+      <!-- Row 1: Saldo | Reserva -->
+      <div class="grid grid-cols-2 gap-3 mb-3">
         <div class="stat-card border-l-4 border-l-slate-700">
           <div class="stat-label">Saldo</div>
           <div class="text-lg sm:text-xl font-bold mt-1" id="dispSaldo">R$ 0,00</div>
@@ -242,31 +234,43 @@
         </div>
       </div>
 
-      <!-- Charts -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
-        <div class="card">
-          <h2 class="text-sm font-bold text-slate-50 mb-4">Comparativo: Entradas vs Despesas</h2>
-          <div class="relative h-48 sm:h-64">
-            <canvas id="chartComparativo"></canvas>
-          </div>
+      <!-- Row 2: Total Entradas | Total Despesas -->
+      <div class="grid grid-cols-2 gap-3 mb-6">
+        <div class="stat-card border-l-4 border-l-[#55E088]">
+          <div class="stat-label">Total Entradas</div>
+          <div class="text-lg sm:text-xl font-bold text-[#55E088] mt-1" id="dispTotalEntradas">R$ 0,00</div>
         </div>
-        <div class="card">
-          <h2 class="text-sm font-bold text-slate-50 mb-4">Distribuição das Despesas</h2>
-          <div class="relative h-48 sm:h-64">
-            <canvas id="chartDespesas"></canvas>
-          </div>
+        <div class="stat-card border-l-4 border-l-[#F20C0C]">
+          <div class="stat-label">Total Despesas</div>
+          <div class="text-lg sm:text-xl font-bold text-[#F20C0C] mt-1" id="dispTotalDespesas">R$ 0,00</div>
         </div>
       </div>
 
-      <!-- Income & Expense Breakdown -->
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        <div class="card">
-          <h2 class="text-sm font-bold text-slate-50 mb-4">Entradas</h2>
-          <div id="dashboardEntradasLista" class="space-y-2"></div>
+      <!-- Comparativo chart -->
+      <div class="card mb-6">
+        <h2 class="text-sm font-bold text-slate-50 mb-4">Comparativo: Entradas vs Despesas</h2>
+        <div class="relative h-48 sm:h-64">
+          <canvas id="chartComparativo"></canvas>
         </div>
-        <div class="card">
-          <h2 class="text-sm font-bold text-slate-50 mb-4">Despesas</h2>
-          <div id="dashboardDespesasLista" class="space-y-2"></div>
+      </div>
+
+      <!-- Entradas list -->
+      <div class="card mb-6">
+        <h2 class="text-sm font-bold text-slate-50 mb-4">Entradas</h2>
+        <div id="dashboardEntradasLista" class="space-y-2"></div>
+      </div>
+
+      <!-- Despesas list -->
+      <div class="card mb-6">
+        <h2 class="text-sm font-bold text-slate-50 mb-4">Despesas</h2>
+        <div id="dashboardDespesasLista" class="space-y-2"></div>
+      </div>
+
+      <!-- Distribuição chart -->
+      <div class="card mb-6">
+        <h2 class="text-sm font-bold text-slate-50 mb-4">Distribuição das Despesas</h2>
+        <div class="relative h-48 sm:h-64">
+          <canvas id="chartDespesas"></canvas>
         </div>
       </div>
     </div>
