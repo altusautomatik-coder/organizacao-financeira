@@ -122,14 +122,22 @@
       background: #0D0D0D;
       border: 1px solid #334155;
       border-radius: 0.75rem;
-      padding: 0.9rem 1.2rem;
+      padding: 0.75rem 1rem;
       display: flex;
       align-items: center;
-      gap: 1rem;
+      gap: 0.75rem;
     }
     .entry-card:hover { border-color: #94A3B8; }
-    .desc-label { font-size: 0.8rem; color: #e2e8f0; font-weight: 500; }
-    .value-label { font-size: 0.9rem; font-weight: 700; }
+    .desc-label { font-size: 0.8rem; color: #e2e8f0; font-weight: 500; flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+    .value-label { font-size: 0.9rem; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
+    .entry-btn { background:none; border:none; cursor:pointer; padding:8px; border-radius:8px; flex-shrink:0; transition:background 0.2s; }
+    .entry-btn:hover { background: rgba(140,7,18,0.15); }
+    .entry-btn svg { display: block; }
+    @media (max-width: 480px) {
+      .entry-card { padding: 0.65rem 0.75rem; gap: 0.5rem; }
+      .desc-label { font-size: 0.75rem; }
+      .value-label { font-size: 0.8rem; }
+    }
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #0D0D0D; }
     ::-webkit-scrollbar-thumb { background: #0D0D0D; border-radius: 3px; }
@@ -144,6 +152,14 @@
     @media (max-width: 480px) {
       input:not([type="range"]):not([type="date"]):not([type="checkbox"]):not([type="radio"]) { padding: 0.55rem 0.75rem; font-size: 16px; }
       .btn-primary, .btn-danger { padding: 0.55rem 1rem; font-size: 0.82rem; }
+      .card { padding: 0.75rem; }
+      .stat-card { padding: 0.6rem 0.75rem; }
+      .stat-label { font-size: 0.6rem; }
+      .tab-btn { font-size: 0.72rem; padding: 0.5rem 0.6rem; }
+      #toastContainer { top: 0.5rem; right: 0.5rem; }
+      .entry-card { padding: 0.55rem 0.65rem; gap: 0.4rem; }
+      .entry-btn { padding: 6px; }
+      .entry-btn svg { width: 16px; height: 16px; }
     }
   </style>
 </head>
@@ -245,6 +261,20 @@
             <canvas id="chartDespesas"></canvas>
           </div>
         </div>
+      </div>
+
+      <!-- Month Selector -->
+      <div class="flex items-center justify-between mb-6 px-1">
+        <div class="flex items-center gap-2">
+          <button id="mesAnteriorBtn" class="p-2 rounded-lg hover:bg-slate-800 transition" style="background:#0D0D0D;border:1px solid #334155;cursor:pointer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+          </button>
+          <span id="mesAtualLabel" class="text-base font-bold text-slate-50 min-w-[150px] text-center"></span>
+          <button id="mesProximoBtn" class="p-2 rounded-lg hover:bg-slate-800 transition" style="background:#0D0D0D;border:1px solid #334155;cursor:pointer">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+          </button>
+        </div>
+        <span class="text-xs text-[#94A3B8] font-medium" id="mesResumoLabel"></span>
       </div>
 
       <!-- Income & Expense Breakdown -->
@@ -504,8 +534,15 @@
         const doc = await db.collection('dados').doc(usuarioAtual.uid).get();
         if (doc.exists) {
           const data = doc.data();
-          if (data.entradas) state.entradas = data.entradas;
-          if (data.despesas) state.despesas = data.despesas;
+          if (data.meses) {
+            state.meses = data.meses;
+            if (data.mesAtual) state.mesAtual = data.mesAtual;
+          } else if (data.entradas) {
+            // Migrate old Firestore format
+            const chave = chaveMes();
+            state.meses = { [chave]: { entradas: data.entradas, despesas: data.despesas || [] } };
+            state.mesAtual = chave;
+          }
           localStorage.setItem('orgFinanceiro', JSON.stringify(state));
         } else {
           salvarFirestore();
@@ -518,8 +555,8 @@
     function salvarFirestore() {
       if (!usuarioAtual) return;
       db.collection('dados').doc(usuarioAtual.uid).set({
-        entradas: state.entradas,
-        despesas: state.despesas,
+        mesAtual: state.mesAtual,
+        meses: state.meses,
       }).catch(e => console.error('Firestore erro ao salvar:', e));
     }
 
@@ -533,12 +570,14 @@
         renderizarEntradas();
         renderizarDespesas();
         await carregarFirestore();
-        if (state.entradas.length > 0 || state.despesas.length > 0) {
+        const temDados = Object.values(state.meses).some(m => m.entradas.length > 0 || m.despesas.length > 0);
+        if (temDados) {
           persistir();
-          atualizarDashboard();
-          renderizarEntradas();
-          renderizarDespesas();
         }
+        atualizarLabelMes();
+        atualizarDashboard();
+        renderizarEntradas();
+        renderizarDespesas();
       } else {
         mostrarApp(false);
         document.getElementById('userArea').style.display = 'none';
@@ -556,12 +595,55 @@
       return Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
     }
 
+    function chaveMes() {
+      const d = new Date();
+      return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0');
+    }
+
+    function formatarMesLabel(chave) {
+      const meses = ['Janeiro', 'Fevereiro', 'Março', 'Abril', 'Maio', 'Junho',
+        'Julho', 'Agosto', 'Setembro', 'Outubro', 'Novembro', 'Dezembro'
+      ];
+      const [ano, mes] = chave.split('-');
+      return meses[parseInt(mes) - 1] + ' ' + ano;
+    }
+
+    function getDadosMes(chave) {
+      if (!state.meses[chave]) {
+        state.meses[chave] = { entradas: [], despesas: [] };
+      }
+      return state.meses[chave];
+    }
+
+    function getEntradas() {
+      return getDadosMes(state.mesAtual).entradas;
+    }
+
+    function getDespesas() {
+      return getDadosMes(state.mesAtual).despesas;
+    }
+
     function carregarState() {
       try {
         const raw = localStorage.getItem('orgFinanceiro');
-        if (raw) return JSON.parse(raw);
+        if (raw) {
+          const data = JSON.parse(raw);
+          // Migrate from old format (flat entradas/despesas) to new format (per-month)
+          if (data.entradas && !data.meses) {
+            const chave = chaveMes();
+            return { mesAtual: chave, meses: { [chave]: { entradas: data.entradas, despesas: data.despesas || [] } } };
+          }
+          if (!data.mesAtual) {
+            data.mesAtual = chaveMes();
+          }
+          if (!data.meses) {
+            data.meses = {};
+          }
+          return data;
+        }
       } catch (_) {}
-      return { entradas: [], despesas: [] };
+      const chave = chaveMes();
+      return { mesAtual: chave, meses: { [chave]: { entradas: [], despesas: [] } } };
     }
 
     const state = carregarState();
@@ -575,9 +657,11 @@
     // COMPUTED TOTALS
     // ================================================================
     function getTotais() {
-      const totalEntradas = state.entradas.reduce((s, e) => s + e.valor, 0);
-      const despesasEssenciais = state.despesas.filter(d => d.tipo === 'essencial').reduce((s, d) => s + d.valor, 0);
-      const despesasNaoEssenciais = state.despesas.filter(d => d.tipo === 'nao-essencial').reduce((s, d) => s + d.valor, 0);
+      const entradas = getEntradas();
+      const despesas = getDespesas();
+      const totalEntradas = entradas.reduce((s, e) => s + e.valor, 0);
+      const despesasEssenciais = despesas.filter(d => d.tipo === 'essencial').reduce((s, d) => s + d.valor, 0);
+      const despesasNaoEssenciais = despesas.filter(d => d.tipo === 'nao-essencial').reduce((s, d) => s + d.valor, 0);
       const totalDespesas = despesasEssenciais + despesasNaoEssenciais;
       const saldo = totalEntradas - totalDespesas;
       const reserva = totalDespesas * 6;
@@ -694,31 +778,36 @@
       saldoEl.style.color = totais.saldo >= 0 ? '#55E088' : '#F20C0C';
       document.getElementById('dispReserva').textContent = fmtB(totais.reserva);
 
+      const entradas = getEntradas();
+      const despesas = getDespesas();
+
       // Entradas breakdown
       const entLista = document.getElementById('dashboardEntradasLista');
-      if (state.entradas.length === 0) {
+      if (entradas.length === 0) {
         entLista.innerHTML = '<p class="text-gray-600 text-sm text-center py-4">Nenhuma entrada cadastrada.</p>';
       } else {
         let html = '';
-        const sorted = [...state.entradas].sort((a, b) => b.valor - a.valor);
+        const sorted = [...entradas].sort((a, b) => b.valor - a.valor);
         for (const e of sorted) {
-          html += '<div class="entry-card"><span class="desc-label flex-1">' + e.descricao + '</span><span class="value-label text-[#55E088]">' + fmtB(e.valor) + '</span></div>';
+          html += '<div class="entry-card"><span class="desc-label">' + e.descricao + '</span><span class="value-label text-[#55E088]">' + fmtB(e.valor) + '</span></div>';
         }
         entLista.innerHTML = html;
       }
 
       // Despesas breakdown
       const despLista = document.getElementById('dashboardDespesasLista');
-      if (state.despesas.length === 0) {
+      if (despesas.length === 0) {
         despLista.innerHTML = '<p class="text-gray-600 text-sm text-center py-4">Nenhuma despesa cadastrada.</p>';
       } else {
         let html = '';
-        const sorted = [...state.despesas].sort((a, b) => b.valor - a.valor);
+        const sorted = [...despesas].sort((a, b) => b.valor - a.valor);
         for (const d of sorted) {
-          html += '<div class="entry-card"><span class="desc-label flex-1">' + d.descricao + '</span><span class="value-label text-[#F20C0C]">' + fmtB(d.valor) + '</span></div>';
+          html += '<div class="entry-card"><span class="desc-label">' + d.descricao + '</span><span class="value-label text-[#F20C0C]">' + fmtB(d.valor) + '</span></div>';
         }
-        entLista.innerHTML = html;
+        despLista.innerHTML = html;
       }
+
+      document.getElementById('mesResumoLabel').textContent = entradas.length + ' entradas | ' + despesas.length + ' despesas';
 
       atualizarCharts();
     }
@@ -733,15 +822,16 @@
       const total = document.getElementById('entradasTotal');
       const totais = getTotais();
       total.textContent = fmtB(totais.totalEntradas);
+      const entradas = getEntradas();
 
-      if (state.entradas.length === 0) {
+      if (entradas.length === 0) {
         lista.innerHTML = '<p class="text-gray-600 text-sm text-center py-4">Nenhuma entrada cadastrada.</p>';
         return;
       }
       let html = '';
-      const sorted = [...state.entradas].sort((a, b) => b.valor - a.valor);
+      const sorted = [...entradas].sort((a, b) => b.valor - a.valor);
       for (const e of sorted) {
-        html += '<div class="entry-card"><span class="desc-label flex-1">' + e.descricao + '</span><span class="value-label text-[#55E088]">' + fmtB(e.valor) + '</span><button class="edit-entrada-btn" data-id="' + e.id + '" title="Editar" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="delete-entrada-btn" data-id="' + e.id + '" title="Excluir" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F20C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
+        html += '<div class="entry-card"><span class="desc-label">' + e.descricao + '</span><span class="value-label text-[#55E088]">' + fmtB(e.valor) + '</span><button class="entry-btn edit-entrada-btn" data-id="' + e.id + '" title="Editar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="entry-btn delete-entrada-btn" data-id="' + e.id + '" title="Excluir"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F20C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
       }
       lista.innerHTML = html;
     }
@@ -752,17 +842,18 @@
       if (!descricao) { mostrarToast('Informe a descrição da entrada.', 'aviso'); return; }
       if (valor <= 0) { mostrarToast('Informe um valor válido.', 'aviso'); return; }
 
+      const entradas = getDadosMes(state.mesAtual).entradas;
       if (entradaEditandoId) {
-        const idx = state.entradas.findIndex(e => e.id === entradaEditandoId);
+        const idx = entradas.findIndex(e => e.id === entradaEditandoId);
         if (idx !== -1) {
-          state.entradas[idx] = { ...state.entradas[idx], descricao, valor };
+          entradas[idx] = { ...entradas[idx], descricao, valor };
         }
         entradaEditandoId = null;
         document.getElementById('entradasFormTitle').textContent = 'Nova Entrada';
         document.getElementById('salvarEntradaBtn').textContent = 'Adicionar';
         document.getElementById('cancelarEntradaBtn').style.display = 'none';
       } else {
-        state.entradas.push({ id: gerarId(), descricao, valor });
+        entradas.push({ id: gerarId(), descricao, valor });
       }
       persistir();
       document.getElementById('entradaDescricao').value = '';
@@ -786,7 +877,9 @@
       if (deleteBtn) {
         const id = deleteBtn.dataset.id;
         if (!await mostrarConfirm('Excluir esta entrada?')) return;
-        state.entradas = state.entradas.filter(e => e.id !== id);
+        const entradas = getDadosMes(state.mesAtual).entradas;
+        const idx = entradas.findIndex(e => e.id === id);
+        if (idx !== -1) entradas.splice(idx, 1);
         persistir();
         renderizarEntradas();
         atualizarDashboard();
@@ -796,7 +889,8 @@
       const editBtn = e.target.closest('.edit-entrada-btn');
       if (editBtn) {
         const id = editBtn.dataset.id;
-        const entrada = state.entradas.find(e => e.id === id);
+        const entradas = getEntradas();
+        const entrada = entradas.find(e => e.id === id);
         if (!entrada) return;
         entradaEditandoId = id;
         document.getElementById('entradaDescricao').value = entrada.descricao;
@@ -827,8 +921,9 @@
     });
 
     function renderizarDespesas() {
-      const essenciais = state.despesas.filter(d => d.tipo === 'essencial');
-      const naoEssenciais = state.despesas.filter(d => d.tipo === 'nao-essencial');
+      const despesas = getDespesas();
+      const essenciais = despesas.filter(d => d.tipo === 'essencial');
+      const naoEssenciais = despesas.filter(d => d.tipo === 'nao-essencial');
       const totais = getTotais();
 
       document.getElementById('despesasEssenciaisTotal').textContent = fmtB(totais.despesasEssenciais);
@@ -844,7 +939,7 @@
         let html = '';
         const sorted = [...arr].sort((a, b) => b.valor - a.valor);
         for (const d of sorted) {
-          html += '<div class="entry-card"><span class="desc-label flex-1">' + d.descricao + '</span><span class="value-label text-[#F20C0C]">' + fmtB(d.valor) + '</span><button class="edit-despesa-btn" data-id="' + d.id + '" title="Editar" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="delete-despesa-btn" data-id="' + d.id + '" title="Excluir" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F20C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
+          html += '<div class="entry-card"><span class="desc-label">' + d.descricao + '</span><span class="value-label text-[#F20C0C]">' + fmtB(d.valor) + '</span><button class="entry-btn edit-despesa-btn" data-id="' + d.id + '" title="Editar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="entry-btn delete-despesa-btn" data-id="' + d.id + '" title="Excluir"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F20C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
         }
         container.innerHTML = html;
       };
@@ -861,17 +956,18 @@
       if (!descricao) { mostrarToast('Informe a descrição da despesa.', 'aviso'); return; }
       if (valor <= 0) { mostrarToast('Informe um valor válido.', 'aviso'); return; }
 
+      const despesas = getDadosMes(state.mesAtual).despesas;
       if (despesaEditandoId) {
-        const idx = state.despesas.findIndex(d => d.id === despesaEditandoId);
+        const idx = despesas.findIndex(d => d.id === despesaEditandoId);
         if (idx !== -1) {
-          state.despesas[idx] = { ...state.despesas[idx], descricao, valor, tipo };
+          despesas[idx] = { ...despesas[idx], descricao, valor, tipo };
         }
         despesaEditandoId = null;
         document.getElementById('despesasFormTitle').textContent = 'Nova Despesa';
         document.getElementById('salvarDespesaBtn').textContent = 'Adicionar';
         document.getElementById('cancelarDespesaBtn').style.display = 'none';
       } else {
-        state.despesas.push({ id: gerarId(), descricao, valor, tipo });
+        despesas.push({ id: gerarId(), descricao, valor, tipo });
       }
       persistir();
       document.getElementById('despesaDescricao').value = '';
@@ -895,7 +991,9 @@
       if (deleteBtn) {
         const id = deleteBtn.dataset.id;
         if (!await mostrarConfirm('Excluir esta despesa?')) return;
-        state.despesas = state.despesas.filter(d => d.id !== id);
+        const despesas = getDadosMes(state.mesAtual).despesas;
+        const idx = despesas.findIndex(d => d.id === id);
+        if (idx !== -1) despesas.splice(idx, 1);
         persistir();
         renderizarDespesas();
         atualizarDashboard();
@@ -905,7 +1003,8 @@
       const editBtn = e.target.closest('.edit-despesa-btn');
       if (editBtn) {
         const id = editBtn.dataset.id;
-        const despesa = state.despesas.find(d => d.id === id);
+        const despesas = getDespesas();
+        const despesa = despesas.find(d => d.id === id);
         if (!despesa) return;
         despesaEditandoId = id;
         document.getElementById('despesaDescricao').value = despesa.descricao;
@@ -924,7 +1023,9 @@
       if (deleteBtn) {
         const id = deleteBtn.dataset.id;
         if (!await mostrarConfirm('Excluir esta despesa?')) return;
-        state.despesas = state.despesas.filter(d => d.id !== id);
+        const despesas = getDadosMes(state.mesAtual).despesas;
+        const idx = despesas.findIndex(d => d.id === id);
+        if (idx !== -1) despesas.splice(idx, 1);
         persistir();
         renderizarDespesas();
         atualizarDashboard();
@@ -934,7 +1035,8 @@
       const editBtn = e.target.closest('.edit-despesa-btn');
       if (editBtn) {
         const id = editBtn.dataset.id;
-        const despesa = state.despesas.find(d => d.id === id);
+        const despesas = getDespesas();
+        const despesa = despesas.find(d => d.id === id);
         if (!despesa) return;
         despesaEditandoId = id;
         document.getElementById('despesaDescricao').value = despesa.descricao;
@@ -1068,8 +1170,35 @@
     });
 
     // ================================================================
+    // MONTH NAVIGATION
+    // ================================================================
+    function atualizarLabelMes() {
+      document.getElementById('mesAtualLabel').textContent = formatarMesLabel(state.mesAtual);
+    }
+
+    function navegarMes(direcao) {
+      const [ano, mes] = state.mesAtual.split('-').map(Number);
+      let novoMes = mes + direcao;
+      let novoAno = ano;
+      if (novoMes < 1) { novoMes = 12; novoAno--; }
+      if (novoMes > 12) { novoMes = 1; novoAno++; }
+      const chave = novoAno + '-' + String(novoMes).padStart(2, '0');
+      state.mesAtual = chave;
+      getDadosMes(chave);
+      persistir();
+      atualizarLabelMes();
+      renderizarEntradas();
+      renderizarDespesas();
+      atualizarDashboard();
+    }
+
+    document.getElementById('mesAnteriorBtn').addEventListener('click', () => navegarMes(-1));
+    document.getElementById('mesProximoBtn').addEventListener('click', () => navegarMes(1));
+
+    // ================================================================
     // INIT
     // ================================================================
+    atualizarLabelMes();
     initCharts();
     renderizarEntradas();
     renderizarDespesas();
