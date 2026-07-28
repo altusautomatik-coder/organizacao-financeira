@@ -1596,6 +1596,7 @@
       document.getElementById('calDescricao').value = '';
       document.getElementById('calValor').value = '';
       renderizarCalendario();
+      mostrarToast('Gasto fixo adicionado!', 'success');
     }
 
     async function removerGastoFixo(id) {
@@ -1607,6 +1608,7 @@
         gastos.splice(idx, 1);
         persistir();
         renderizarCalendario();
+        mostrarToast('Gasto fixo removido!', 'success');
       }
     }
 
