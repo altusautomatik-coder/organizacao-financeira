@@ -122,22 +122,14 @@
       background: #0D0D0D;
       border: 1px solid #334155;
       border-radius: 0.75rem;
-      padding: 0.75rem 1rem;
+      padding: 0.9rem 1.2rem;
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 1rem;
     }
     .entry-card:hover { border-color: #94A3B8; }
-    .desc-label { font-size: 0.8rem; color: #e2e8f0; font-weight: 500; flex-shrink: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-    .value-label { font-size: 0.9rem; font-weight: 700; white-space: nowrap; flex-shrink: 0; }
-    .entry-btn { background:none; border:none; cursor:pointer; padding:8px; border-radius:8px; flex-shrink:0; transition:background 0.2s; }
-    .entry-btn:hover { background: rgba(140,7,18,0.15); }
-    .entry-btn svg { display: block; }
-    @media (max-width: 480px) {
-      .entry-card { padding: 0.65rem 0.75rem; gap: 0.5rem; }
-      .desc-label { font-size: 0.75rem; }
-      .value-label { font-size: 0.8rem; }
-    }
+    .desc-label { font-size: 0.8rem; color: #e2e8f0; font-weight: 500; }
+    .value-label { font-size: 0.9rem; font-weight: 700; }
     ::-webkit-scrollbar { width: 6px; }
     ::-webkit-scrollbar-track { background: #0D0D0D; }
     ::-webkit-scrollbar-thumb { background: #0D0D0D; border-radius: 3px; }
@@ -152,14 +144,6 @@
     @media (max-width: 480px) {
       input:not([type="range"]):not([type="date"]):not([type="checkbox"]):not([type="radio"]) { padding: 0.55rem 0.75rem; font-size: 16px; }
       .btn-primary, .btn-danger { padding: 0.55rem 1rem; font-size: 0.82rem; }
-      .card { padding: 0.75rem; }
-      .stat-card { padding: 0.6rem 0.75rem; }
-      .stat-label { font-size: 0.6rem; }
-      .tab-btn { font-size: 0.72rem; padding: 0.5rem 0.6rem; }
-      #toastContainer { top: 0.5rem; right: 0.5rem; }
-      .entry-card { padding: 0.55rem 0.65rem; gap: 0.4rem; }
-      .entry-btn { padding: 6px; }
-      .entry-btn svg { width: 16px; height: 16px; }
     }
   </style>
 </head>
@@ -792,7 +776,7 @@
         let html = '';
         const sorted = [...entradas].sort((a, b) => b.valor - a.valor);
         for (const e of sorted) {
-          html += '<div class="entry-card"><span class="desc-label">' + e.descricao + '</span><span class="value-label text-[#55E088]">' + fmtB(e.valor) + '</span></div>';
+          html += '<div class="entry-card"><span class="desc-label flex-1">' + e.descricao + '</span><span class="value-label text-[#55E088]">' + fmtB(e.valor) + '</span></div>';
         }
         entLista.innerHTML = html;
       }
@@ -805,7 +789,7 @@
         let html = '';
         const sorted = [...despesas].sort((a, b) => b.valor - a.valor);
         for (const d of sorted) {
-          html += '<div class="entry-card"><span class="desc-label">' + d.descricao + '</span><span class="value-label text-[#F20C0C]">' + fmtB(d.valor) + '</span></div>';
+          html += '<div class="entry-card"><span class="desc-label flex-1">' + d.descricao + '</span><span class="value-label text-[#F20C0C]">' + fmtB(d.valor) + '</span></div>';
         }
         despLista.innerHTML = html;
       }
@@ -834,7 +818,7 @@
       let html = '';
       const sorted = [...entradas].sort((a, b) => b.valor - a.valor);
       for (const e of sorted) {
-        html += '<div class="entry-card"><span class="desc-label">' + e.descricao + '</span><span class="value-label text-[#55E088]">' + fmtB(e.valor) + '</span><button class="entry-btn edit-entrada-btn" data-id="' + e.id + '" title="Editar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="entry-btn delete-entrada-btn" data-id="' + e.id + '" title="Excluir"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F20C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
+        html += '<div class="entry-card"><span class="desc-label flex-1">' + e.descricao + '</span><span class="value-label text-[#55E088]">' + fmtB(e.valor) + '</span><button class="edit-entrada-btn" data-id="' + e.id + '" title="Editar" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="delete-entrada-btn" data-id="' + e.id + '" title="Excluir" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F20C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
       }
       lista.innerHTML = html;
     }
@@ -942,7 +926,7 @@
         let html = '';
         const sorted = [...arr].sort((a, b) => b.valor - a.valor);
         for (const d of sorted) {
-          html += '<div class="entry-card"><span class="desc-label">' + d.descricao + '</span><span class="value-label text-[#F20C0C]">' + fmtB(d.valor) + '</span><button class="entry-btn edit-despesa-btn" data-id="' + d.id + '" title="Editar"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="entry-btn delete-despesa-btn" data-id="' + d.id + '" title="Excluir"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F20C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
+          html += '<div class="entry-card"><span class="desc-label flex-1">' + d.descricao + '</span><span class="value-label text-[#F20C0C]">' + fmtB(d.valor) + '</span><button class="edit-despesa-btn" data-id="' + d.id + '" title="Editar" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#94A3B8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg></button><button class="delete-despesa-btn" data-id="' + d.id + '" title="Excluir" style="background:none;border:none;cursor:pointer;padding:4px;border-radius:4px;flex-shrink:0"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#F20C0C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
         }
         container.innerHTML = html;
       };
