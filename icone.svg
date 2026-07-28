@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500">
+  <defs>
+    <linearGradient id="coinGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#55E088"/>
+      <stop offset="100%" stop-color="#12823B"/>
+    </linearGradient>
+  </defs>
+  <!-- Outer coin circle -->
+  <circle cx="250" cy="250" r="210" fill="none" stroke="url(#coinGrad)" stroke-width="20"/>
+  <!-- Inner coin detail -->
+  <circle cx="250" cy="250" r="140" fill="none" stroke="#8C0712" stroke-width="8"/>
+  <!-- R$ text -->
+  <text x="250" y="285" text-anchor="middle" font-size="130" font-weight="900" fill="#e2e8f0" font-family="system-ui, sans-serif">R$</text>
+</svg>
