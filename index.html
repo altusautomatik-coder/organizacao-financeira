@@ -167,6 +167,10 @@
     body.light-mode #loginOverlay input { background: #fafaf8; border-color: #d8d4cc; color: #2F2F2F; }
     body.light-mode details[style*="border"] { border-color: #d8d4cc !important; }
     body.light-mode details summary { background: #fafaf8 !important; color: #2F2F2F !important; }
+    body.light-mode .examples-content { color: #2F2F2F !important; }
+    body.light-mode .examples-content .desc-header { color: #2F2F2F !important; }
+    body.light-mode .examples-content .desc-header span { color: #2F2F2F !important; }
+    body.light-mode .examples-content [class*="border-"] { border-color: #d8d4cc !important; }
     body.light-mode details summary:hover { color: #2F2F2F !important; }
     body.light-mode .border-gray-800 { border-color: #d8d4cc; }
     body.light-mode ::-webkit-scrollbar-track { background: #f5f3ef; }
@@ -355,11 +359,11 @@
             <!-- Exemplos de Entradas -->
             <details class="mt-4" style="border:1px solid #334155;border-radius:0.75rem;overflow:hidden">
               <summary class="px-4 py-3 text-sm font-semibold text-[#94A3B8] cursor-pointer list-none flex items-center justify-between hover:text-[#e2e8f0] transition" style="background:#0D0D0D">
-                <span>EXEMPLOS</span>
+                <span style="font-style:italic">EXEMPLOS</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform"><polyline points="6 9 12 15 18 9"/></svg>
               </summary>
-              <div class="px-4 pb-3 text-xs text-[#94A3B8] space-y-0">
-                <div class="flex items-center justify-between py-2 font-semibold border-b border-[#334155] text-[#e2e8f0]">
+              <div class="px-4 pb-3 text-xs text-[#94A3B8] space-y-0 examples-content">
+                <div class="flex items-center justify-between py-2 font-semibold border-b border-[#334155] text-[#e2e8f0] desc-header">
                   <span>DESCRIÇÃO</span>
                 </div>
                 <div class="py-2 border-b border-[#334155]">  <span>SALÁRIO LÍQUIDO DE [PESSOA 01]</span></div>
@@ -422,10 +426,10 @@
             <!-- Exemplos de Despesas -->
             <details class="mt-4" style="border:1px solid #334155;border-radius:0.75rem;overflow:hidden">
               <summary class="px-4 py-3 text-sm font-semibold text-[#94A3B8] cursor-pointer list-none flex items-center justify-between hover:text-[#e2e8f0] transition" style="background:#0D0D0D">
-                <span>EXEMPLOS</span>
+                <span style="font-style:italic">EXEMPLOS</span>
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="transition-transform"><polyline points="6 9 12 15 18 9"/></svg>
               </summary>
-              <div class="px-4 pb-3 text-xs text-[#94A3B8] space-y-0">
+              <div class="px-4 pb-3 text-xs text-[#94A3B8] space-y-0 examples-content">
                 <div class="py-2 font-semibold border-b border-[#334155] text-[#55E088]">ESSENCIAIS</div>
                 <div class="py-2 border-b border-[#334155]">MORADIA (ALUGUEL/FINANCIAMENTO)</div>
                 <div class="py-2 border-b border-[#334155]">CONDOMÍNIO</div>
