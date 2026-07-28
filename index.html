@@ -198,6 +198,22 @@
     body.light-mode .calc-btn[style*="#12823B"] { background: #12823B !important; color: #f8fafc !important; }
     body.light-mode #calcClear { background: #e8e4dc !important; border-color: #d8d4cc !important; color: #2F2F2F !important; }
     body.light-mode #calcBackspace { background: #e8e4dc !important; border-color: #d8d4cc !important; color: #2F2F2F !important; }
+    .cal-dia { aspect-ratio: 1; display: flex; align-items: center; justify-content: center; border-radius: 0.5rem; cursor: pointer; font-size: 0.82rem; font-weight: 500; transition: background 0.15s, border-color 0.15s; border: 1px solid transparent; color: #e2e8f0; background: transparent; position: relative; user-select: none; }
+    .cal-dia:hover { background: #1E293B; border-color: #334155; }
+    .cal-dia.other-month { color: #475569; }
+    .cal-dia.today { border-color: #8C0712; font-weight: 700; }
+    .cal-dia.selected { background: #8C0712; border-color: #8C0712; color: #fff; font-weight: 700; }
+    .cal-dia.has-gasto::after { content: ''; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); width: 5px; height: 5px; border-radius: 50%; background: #55E088; }
+    .cal-dia.selected.has-gasto::after { background: #fff; }
+    body.light-mode .cal-dia { color: #2F2F2F; }
+    body.light-mode .cal-dia:hover { background: #e5e0d8; border-color: #d8d4cc; }
+    body.light-mode .cal-dia.other-month { color: #b0a99a; }
+    body.light-mode .cal-dia.today { border-color: #8C0712; }
+    body.light-mode .cal-dia.selected { background: #8C0712; border-color: #8C0712; color: #fff; }
+    body.light-mode .cal-dia.has-gasto::after { background: #12823B; }
+    body.light-mode .cal-dia.selected.has-gasto::after { background: #fff; }
+    body.light-mode #calLista .entry-card { background: #fafaf8; border-color: #d8d4cc; }
+    body.light-mode #calLista .entry-card:hover { border-color: #bfb9ae; }
     @media (max-width: 480px) {
       input:not([type="range"]):not([type="date"]):not([type="checkbox"]):not([type="radio"]) { padding: 0.55rem 0.75rem; font-size: 16px; }
       .btn-primary, .btn-danger { padding: 0.55rem 1rem; font-size: 0.82rem; }
@@ -273,6 +289,7 @@
       <button class="tab-btn active flex-1 sm:flex-none text-center text-[13px] sm:text-sm whitespace-nowrap px-1 sm:px-4 py-3 sm:py-3" style="touch-action:manipulation" data-tab="dashboard"><span class="sm:hidden">📊</span><span class="hidden sm:inline">📊 Visão Geral</span></button>
       <button class="tab-btn flex-1 sm:flex-none text-center text-[13px] sm:text-sm whitespace-nowrap px-1 sm:px-4 py-3 sm:py-3" style="touch-action:manipulation" data-tab="entradas"><span class="sm:hidden">💰</span><span class="hidden sm:inline">💰 Entradas</span></button>
       <button class="tab-btn flex-1 sm:flex-none text-center text-[13px] sm:text-sm whitespace-nowrap px-1 sm:px-4 py-3 sm:py-3" style="touch-action:manipulation" data-tab="despesas"><span class="sm:hidden">💳</span><span class="hidden sm:inline">💳 Despesas</span></button>
+      <button class="tab-btn flex-1 sm:flex-none text-center text-[13px] sm:text-sm whitespace-nowrap px-1 sm:px-4 py-3 sm:py-3" style="touch-action:manipulation" data-tab="calendario"><span class="sm:hidden">📅</span><span class="hidden sm:inline">📅 Calendário</span></button>
       <button class="tab-btn flex-1 sm:flex-none text-center text-[13px] sm:text-sm whitespace-nowrap px-1 sm:px-4 py-3 sm:py-3" style="touch-action:manipulation" data-tab="calc"><span class="sm:hidden">🔢</span><span class="hidden sm:inline">🔢 Calculadora</span></button>
     </div>
 
@@ -488,6 +505,59 @@
             <div class="flex items-center justify-between">
               <h2 class="text-sm font-bold text-slate-50">Total Geral Despesas</h2>
               <span class="text-lg font-bold text-[#F20C0C]" id="despesasGeralTotal">R$ 0,00</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ================================================================ -->
+    <!-- TAB 5: CALENDÁRIO -->
+    <!-- ================================================================ -->
+    <div id="tab-calendario" class="tab-content">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <!-- Calendar -->
+        <div class="lg:col-span-2">
+          <div class="card">
+            <div class="flex items-center justify-between mb-5">
+              <button id="calMesAnterior" class="text-[#94A3B8] hover:text-white transition p-1" style="touch-action:manipulation">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
+              </button>
+              <h2 class="text-sm font-bold text-slate-50" id="calMesLabel">Janeiro 2025</h2>
+              <button id="calMesSeguinte" class="text-[#94A3B8] hover:text-white transition p-1" style="touch-action:manipulation">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"/></svg>
+              </button>
+            </div>
+            <div class="grid grid-cols-7 gap-1 text-center text-xs font-semibold text-[#94A3B8] mb-2">
+              <div class="py-1">DOM</div>
+              <div class="py-1">SEG</div>
+              <div class="py-1">TER</div>
+              <div class="py-1">QUA</div>
+              <div class="py-1">QUI</div>
+              <div class="py-1">SEX</div>
+              <div class="py-1">SÁB</div>
+            </div>
+            <div id="calGrid" class="grid grid-cols-7 gap-1"></div>
+          </div>
+        </div>
+        <!-- Day details -->
+        <div class="lg:col-span-1">
+          <div class="card" id="calDetalhes">
+            <h2 class="text-sm font-bold text-slate-50 mb-4" id="calDiaLabel">Selecione um dia</h2>
+            <div id="calSemDia" class="text-xs text-[#94A3B8]">Clique em um dia no calendário para ver ou adicionar gastos fixos.</div>
+            <div id="calComDia" style="display:none">
+              <div class="space-y-3 mb-4">
+                <div>
+                  <label class="stat-label block mb-1.5">Descrição</label>
+                  <input type="text" id="calDescricao" placeholder="Ex: Internet, Streaming..." />
+                </div>
+                <div>
+                  <label class="stat-label block mb-1.5">Valor (R$)</label>
+                  <input type="text" id="calValor" inputmode="decimal" placeholder="0,00" />
+                </div>
+                <button class="btn-primary w-full" id="calAdicionarBtn">Adicionar</button>
+              </div>
+              <div id="calLista" class="space-y-2"></div>
             </div>
           </div>
         </div>
@@ -716,7 +786,10 @@
 
     function getDadosMes(chave) {
       if (!state.meses[chave]) {
-        state.meses[chave] = { entradas: [], despesas: [] };
+        state.meses[chave] = { entradas: [], despesas: [], gastosFixos: [] };
+      }
+      if (!state.meses[chave].gastosFixos) {
+        state.meses[chave].gastosFixos = [];
       }
       return state.meses[chave];
     }
@@ -745,11 +818,14 @@
           if (!data.meses) {
             data.meses = {};
           }
+          if (!data.mesCalendario) {
+            data.mesCalendario = chaveMes();
+          }
           return data;
         }
       } catch (_) {}
       const chave = chaveMes();
-      return { mesAtual: chave, meses: { [chave]: { entradas: [], despesas: [] } } };
+      return { mesAtual: chave, mesCalendario: chave, meses: { [chave]: { entradas: [], despesas: [], gastosFixos: [] } } };
     }
 
     const state = carregarState();
@@ -1174,6 +1250,7 @@
         document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
         if (chartComparativo) { chartComparativo.resize(); chartComparativo.update('none'); }
         if (chartDespesas) { chartDespesas.resize(); chartDespesas.update('none'); }
+        if (btn.dataset.tab === 'calendario') { renderizarCalendario(); }
       });
     });
 
@@ -1335,6 +1412,183 @@
     });
 
     // ================================================================
+    // CALENDAR
+    // ================================================================
+    let calDiaSelecionado = null;
+
+    if (!state.mesCalendario) state.mesCalendario = chaveMes();
+
+    function formatarMesLabelCal(chave) {
+      const [ano, mes] = chave.split('-').map(Number);
+      const meses = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
+      return meses[mes - 1] + ' ' + ano;
+    }
+
+    function getGastosFixos() {
+      return getDadosMes(state.mesCalendario).gastosFixos;
+    }
+
+    function renderizarCalendario() {
+      const [ano, mes] = state.mesCalendario.split('-').map(Number);
+      document.getElementById('calMesLabel').textContent = formatarMesLabelCal(state.mesCalendario);
+
+      const primeiroDia = new Date(ano, mes - 1, 1);
+      const ultimoDia = new Date(ano, mes, 0);
+      const diasNoMes = ultimoDia.getDate();
+      const inicioSemana = primeiroDia.getDay();
+
+      const hoje = new Date();
+      const hojeStr = hoje.getFullYear() + '-' + String(hoje.getMonth() + 1).padStart(2, '0') + '-' + String(hoje.getDate()).padStart(2, '0');
+
+      const gastos = getGastosFixos();
+      const diasComGasto = new Set(gastos.map(g => g.dia));
+
+      const grid = document.getElementById('calGrid');
+      grid.innerHTML = '';
+
+      // Dias do mês anterior (cinza)
+      const mesAnterior = mes === 1 ? 12 : mes - 1;
+      const anoAnterior = mes === 1 ? ano - 1 : ano;
+      const ultimoDiaAnterior = new Date(anoAnterior, mesAnterior, 0).getDate();
+      for (let i = inicioSemana - 1; i >= 0; i--) {
+        const dia = ultimoDiaAnterior - i;
+        const el = document.createElement('div');
+        el.className = 'cal-dia other-month';
+        el.textContent = dia;
+        grid.appendChild(el);
+      }
+
+      // Dias do mês atual
+      for (let d = 1; d <= diasNoMes; d++) {
+        const el = document.createElement('div');
+        el.className = 'cal-dia';
+        const diaStr = ano + '-' + String(mes).padStart(2, '0') + '-' + String(d).padStart(2, '0');
+        if (diaStr === hojeStr) el.classList.add('today');
+        if (diasComGasto.has(d)) el.classList.add('has-gasto');
+        if (calDiaSelecionado === d) el.classList.add('selected');
+        el.textContent = d;
+        el.dataset.dia = d;
+        el.addEventListener('click', () => selecionarDia(d));
+        grid.appendChild(el);
+      }
+
+      // Preencher resto da última semana
+      const totalCells = inicioSemana + diasNoMes;
+      const resto = (7 - (totalCells % 7)) % 7;
+      for (let i = 1; i <= resto; i++) {
+        const el = document.createElement('div');
+        el.className = 'cal-dia other-month';
+        el.textContent = i;
+        grid.appendChild(el);
+      }
+
+      // Se o dia selecionado existe neste mês, mostrar detalhes
+      if (calDiaSelecionado && calDiaSelecionado <= diasNoMes) {
+        mostrarDetalhesDia(calDiaSelecionado);
+      } else {
+        esconderDetalhes();
+      }
+    }
+
+    function selecionarDia(dia) {
+      calDiaSelecionado = dia;
+      renderizarCalendario();
+      mostrarDetalhesDia(dia);
+    }
+
+    function mostrarDetalhesDia(dia) {
+      document.getElementById('calSemDia').style.display = 'none';
+      document.getElementById('calComDia').style.display = 'block';
+      document.getElementById('calDiaLabel').textContent = 'Dia ' + dia;
+
+      document.getElementById('calDescricao').value = '';
+      document.getElementById('calValor').value = '';
+
+      const gastos = getGastosFixos().filter(g => g.dia === dia);
+      const lista = document.getElementById('calLista');
+      lista.innerHTML = '';
+
+      if (gastos.length === 0) {
+        lista.innerHTML = '<div class="text-xs text-[#94A3B8]">Nenhum gasto fixo neste dia.</div>';
+      } else {
+        gastos.forEach(g => {
+          const card = document.createElement('div');
+          card.className = 'entry-card flex items-center justify-between p-2 rounded-lg text-xs';
+          card.innerHTML = '<div><span class="font-semibold text-slate-50">' + g.descricao + '</span></div><div class="flex items-center gap-2"><span class="text-[#F20C0C] font-bold">R$ ' + g.valor.toFixed(2).replace('.', ',') + '</span><button class="cal-remover-btn text-[#94A3B8] hover:text-[#F20C0C] transition p-1" data-id="' + g.id + '"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg></button></div>';
+          lista.appendChild(card);
+        });
+        lista.querySelectorAll('.cal-remover-btn').forEach(btn => {
+          btn.addEventListener('click', () => {
+            removerGastoFixo(btn.dataset.id);
+          });
+        });
+      }
+    }
+
+    function esconderDetalhes() {
+      document.getElementById('calSemDia').style.display = 'block';
+      document.getElementById('calComDia').style.display = 'none';
+      document.getElementById('calDiaLabel').textContent = 'Selecione um dia';
+    }
+
+    function adicionarGastoFixo() {
+      const dia = calDiaSelecionado;
+      if (!dia) return;
+      const descricao = document.getElementById('calDescricao').value.trim();
+      const valorRaw = document.getElementById('calValor').value.trim().replace(',', '.');
+      if (!descricao || !valorRaw) { return; }
+      const valor = parseFloat(valorRaw);
+      if (isNaN(valor) || valor <= 0) { return; }
+
+      const gastos = getGastosFixos();
+      gastos.push({ dia, descricao, valor, id: Date.now() });
+      persistir();
+      document.getElementById('calDescricao').value = '';
+      document.getElementById('calValor').value = '';
+      renderizarCalendario();
+    }
+
+    function removerGastoFixo(id) {
+      const gastos = getGastosFixos();
+      const idx = gastos.findIndex(g => g.id == id);
+      if (idx !== -1) {
+        gastos.splice(idx, 1);
+        persistir();
+        renderizarCalendario();
+      }
+    }
+
+    document.getElementById('calMesAnterior').addEventListener('click', () => {
+      const [ano, mes] = state.mesCalendario.split('-').map(Number);
+      let novoMes = mes - 1;
+      let novoAno = ano;
+      if (novoMes < 1) { novoMes = 12; novoAno--; }
+      state.mesCalendario = novoAno + '-' + String(novoMes).padStart(2, '0');
+      getDadosMes(state.mesCalendario);
+      calDiaSelecionado = null;
+      renderizarCalendario();
+    });
+
+    document.getElementById('calMesSeguinte').addEventListener('click', () => {
+      const [ano, mes] = state.mesCalendario.split('-').map(Number);
+      let novoMes = mes + 1;
+      let novoAno = ano;
+      if (novoMes > 12) { novoMes = 1; novoAno++; }
+      state.mesCalendario = novoAno + '-' + String(novoMes).padStart(2, '0');
+      getDadosMes(state.mesCalendario);
+      calDiaSelecionado = null;
+      renderizarCalendario();
+    });
+
+    document.getElementById('calAdicionarBtn').addEventListener('click', adicionarGastoFixo);
+
+    ['calDescricao', 'calValor'].forEach(id => {
+      document.getElementById(id).addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') { e.preventDefault(); adicionarGastoFixo(); }
+      });
+    });
+
+    // ================================================================
     // INIT
     // ================================================================
     atualizarLabelMes();
@@ -1342,6 +1596,7 @@
     renderizarEntradas();
     renderizarDespesas();
     atualizarDashboard();
+    renderizarCalendario();
   </script>
   <script>
     if ('serviceWorker' in navigator) {
