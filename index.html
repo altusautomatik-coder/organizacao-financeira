@@ -800,10 +800,7 @@
 
     function getDadosMes(chave) {
       if (!state.meses[chave]) {
-        state.meses[chave] = { entradas: [], despesas: [], gastosFixos: [] };
-      }
-      if (!state.meses[chave].gastosFixos) {
-        state.meses[chave].gastosFixos = [];
+        state.meses[chave] = { entradas: [], despesas: [] };
       }
       return state.meses[chave];
     }
@@ -835,11 +832,22 @@
           if (!data.mesCalendario) {
             data.mesCalendario = chaveMes();
           }
+          if (!data.gastosFixosRecorrentes) {
+            data.gastosFixosRecorrentes = [];
+            // Migrate old per-month gastosFixos to global
+            for (const chave of Object.keys(data.meses)) {
+              const m = data.meses[chave];
+              if (m.gastosFixos && m.gastosFixos.length) {
+                data.gastosFixosRecorrentes.push(...m.gastosFixos);
+                m.gastosFixos = [];
+              }
+            }
+          }
           return data;
         }
       } catch (_) {}
       const chave = chaveMes();
-      return { mesAtual: chave, mesCalendario: chave, meses: { [chave]: { entradas: [], despesas: [], gastosFixos: [] } } };
+      return { mesAtual: chave, mesCalendario: chave, gastosFixosRecorrentes: [], meses: { [chave]: { entradas: [], despesas: [] } } };
     }
 
     const state = carregarState();
@@ -1486,7 +1494,8 @@
     }
 
     function getGastosFixos() {
-      return getDadosMes(state.mesCalendario).gastosFixos;
+      if (!state.gastosFixosRecorrentes) state.gastosFixosRecorrentes = [];
+      return state.gastosFixosRecorrentes;
     }
 
     function renderizarCalendario() {
